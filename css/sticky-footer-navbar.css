@@ -1,0 +1,44 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #1aefa1;
+  background: -webkit-linear-gradient(left, #1aefa1 , #0ddc90); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, #1aefa1, #0ddc90); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right, #1aefa1, #0ddc90); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, #1aefa1 , #0ddc90); /* Standard syntax */
+  color: #ffffff;
+  
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  padding: 60px 15px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+  text-align: center;
+}
+
+code {
+  font-size: 80%;
+}
