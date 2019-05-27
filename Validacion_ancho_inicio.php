@@ -27,7 +27,7 @@
 							$consulta4 = "EXEC[MTY_PROD_SSM].[dbo].[SP_INSPECCION_ONDULACIONES] @WO_NO = '". strtoupper($_GET["wo"]) ."'";
             				$resultado5 = odbc_do($conn, $consulta4);
                        	
-							$consulta = "select ISNULL(MOTHER_BOM, 'BALANCE') AS MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."'and FINAL_CHECK is NULL or FINAL_CHECK = 0 AND MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
+							$consulta = "select ISNULL(MOTHER_BOM, 'BALANCE') AS MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."'and FINAL_CHECK is NULL or FINAL_CHECK = 0 and  MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
 							  $resultado = odbc_do($conn, $consulta);  
 							  $yavalidado = 1;
 							  while (odbc_fetch_row($resultado)) {
