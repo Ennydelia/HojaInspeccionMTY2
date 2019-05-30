@@ -40,7 +40,10 @@
 									  $consulta = "SELECT BOM_NO,  convert(varchar(20),MIN_ANCHO) MIN_ANCHO,  convert(varchar(20),MAX_ANCHO) MAX_ANCHO, VAL_ETI_SUPERVISOR FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
 									  $resultado = odbc_do($conn, $consulta); 
 									  echo "<center><h4>ETIQUETA SUPERVISOR</h4></center>";
-									  echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
+										echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
+										echo "<input name='liberar' id='liberar' type='submit' class='btn btn-warning' style='float:right; display:none;' value='Liberar' onclick='Liberar()'>";
+										echo '</br>';
+										echo '</br>';
 									  //aqui cambiar los IDs
 									  echo '<form id="campovalidar" action="" method="post">';
 									  echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>SUPERVISOR</th></tr>';
@@ -52,14 +55,20 @@
 									  } 
 
 									  //AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
-									 echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ETI_SUPERVISOR"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
+									 echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ETI_SUPERVISOR"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
 
-									  //AQUI VA EL SCRIPT DE VALIDACION;
-									 echo" <script>
-										  $(document).ready(function () {
-											$('#campovalidar').validate({ 
-												errorClass: 'invalid',
-												validClass: 'success',
+									 //AQUI VA EL SCRIPT DE VALIDACION;
+									echo" <script>
+											 $(document).ready(function () {
+												 $('#campovalidar').validate({ 
+													 errorClass: 'invalid',
+													 validClass: 'success',
+													 errorPlacement: function(){
+														 $('#liberar').show();
+														 $('#continuar').show();
+														 $('#siguiente').hide();
+														 
+														 },
 												rules: {";
 
 												$consulta = "SELECT BOM_NO,  convert(varchar(20),MIN_ANCHO) MIN_ANCHO,  convert(varchar(20),MAX_ANCHO) MAX_ANCHO, VAL_ETI_SUPERVISOR FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
@@ -221,99 +230,138 @@ function PagRec() {
 	//alert("¡Haz denegado el mensaje!");
 	}
 }
-$("#campovalidar").on('change', function() {
-	var isvalid = $("#campovalidar").valid();
-  if (isvalid) {
-  	$("#continuar").hide();
-		$("#siguiente").show();
-  } else {
-  	$('#siguiente').hide();
-  	$('#continuar').show();
- }
-});		
-
-
-		   $( function()
-			{
-				var targets = $( '[rel~=tooltip]' ),
-					target  = false,
-					tooltip = false,
-					title   = false;
-			
-				targets.bind( 'mouseenter', function()
-				{
-					target  = $( this );
-					tip     = target.attr( 'title' );
-					tooltip = $( '<div id="tooltip"></div>' );
-			
-					if( !tip || tip == '' )
-						return false;
-			
-					target.removeAttr( 'title' );
-					tooltip.css( 'opacity', 0 )
-						  .html( tip )
-						  .appendTo( 'body' );
-			
-					var init_tooltip = function()
-					{
-						if( $( window ).width() < tooltip.outerWidth() * 1.5 )
-							tooltip.css( 'max-width', $( window ).width() / 2 );
-						else
-							tooltip.css( 'max-width', 340 );
-			
-						var pos_left = target.offset().left + ( target.outerWidth() / 2 ) - ( tooltip.outerWidth() / 2 ),
-							pos_top  = target.offset().top - tooltip.outerHeight() - 20;
-			
-						if( pos_left < 0 )
+function Liberar() {
+		$.confirm({
+			title: 'Desbloquear informacion',
+    	content: '' +
+    	'<form action="" class="formName">' +
+    	'<div class="form-group">' +
+    	'<label>Porfavor escriba la clave:</label>' +
+    	'<input type="password" placeholder="clave" class="name form-control" required />' +
+    	'</div>' +
+   		'</form>',
+			 buttons: {
+      	formSubmit: {
+      	  text: 'Aceptar',
+          btnClass: 'btn-red',
+          action: function () {
+          var name = this.$content.find('.name').val();
+					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
+          if(name == 'Inspectores2019' || name == 'Calidad2019') {
+            $.alert('Datos desbloqueados');
+					var validator = $( "#campovalidar" ).validate();
+					validator.resetForm();
+					$("#continuar").hide();
+					$("#siguiente").show();
+					$("#liberar").hide();
+					// $("#campovalidar").removeAttr("readonly");
+					// $("#campovalidar")[0].reset();	
+          }
+					else{
+						$.alert('Clave incorrecta');
+            return false;
+          }
+				}
+      },
+      cancel: function () {
+      //close
+      },
+    },
+    onContentReady: function () {
+    // bind to events
+    	var jc = this;
+      this.$content.find('form').on('submit', function (e) {
+      	 // if the user submits the form by pressing enter in the field.
+        e.preventDefault();
+        jc.$$formSubmit.trigger('click'); // reference the button and click it
+      });
+    }
+	});
+}
+	
+					
+					 $( function()
 						{
-							pos_left = target.offset().left + target.outerWidth() / 2 - 20;
-							tooltip.addClass( 'left' );
-						}
-						else
-							tooltip.removeClass( 'left' );
-			
-						if( pos_left + tooltip.outerWidth() > $( window ).width() )
-						{
-							pos_left = target.offset().left - tooltip.outerWidth() + target.outerWidth() / 2 + 20;
-							tooltip.addClass( 'right' );
-						}
-						else
-							tooltip.removeClass( 'right' );
-			
-						if( pos_top < 0 )
-						{
-							var pos_top  = target.offset().top + target.outerHeight();
-							tooltip.addClass( 'top' );
-						}
-						else
-							tooltip.removeClass( 'top' );
-			
-						tooltip.css( { left: pos_left, top: pos_top } )
-							  .animate( { top: '+=10', opacity: 1 }, 50 );
-					};
-			
-					init_tooltip();
-					$( window ).resize( init_tooltip );
-			
-					var remove_tooltip = function()
-					{
-						tooltip.animate( { top: '-=10', opacity: 0 }, 50, function()
-						{
-							$( this ).remove();
+								var targets = $( '[rel~=tooltip]' ),
+										target  = false,
+										tooltip = false,
+										title   = false;
+						
+								targets.bind( 'mouseenter', function()
+								{
+										target  = $( this );
+										tip     = target.attr( 'title' );
+										tooltip = $( '<div id="tooltip"></div>' );
+						
+										if( !tip || tip == '' )
+												return false;
+						
+										target.removeAttr( 'title' );
+										tooltip.css( 'opacity', 0 )
+													.html( tip )
+													.appendTo( 'body' );
+						
+										var init_tooltip = function()
+										{
+												if( $( window ).width() < tooltip.outerWidth() * 1.5 )
+														tooltip.css( 'max-width', $( window ).width() / 2 );
+												else
+														tooltip.css( 'max-width', 340 );
+						
+												var pos_left = target.offset().left + ( target.outerWidth() / 2 ) - ( tooltip.outerWidth() / 2 ),
+														pos_top  = target.offset().top - tooltip.outerHeight() - 20;
+						
+												if( pos_left < 0 )
+												{
+														pos_left = target.offset().left + target.outerWidth() / 2 - 20;
+														tooltip.addClass( 'left' );
+												}
+												else
+														tooltip.removeClass( 'left' );
+						
+												if( pos_left + tooltip.outerWidth() > $( window ).width() )
+												{
+														pos_left = target.offset().left - tooltip.outerWidth() + target.outerWidth() / 2 + 20;
+														tooltip.addClass( 'right' );
+												}
+												else
+														tooltip.removeClass( 'right' );
+						
+												if( pos_top < 0 )
+												{
+														var pos_top  = target.offset().top + target.outerHeight();
+														tooltip.addClass( 'top' );
+												}
+												else
+														tooltip.removeClass( 'top' );
+						
+												tooltip.css( { left: pos_left, top: pos_top } )
+															.animate( { top: '+=10', opacity: 1 }, 50 );
+										};
+						
+										init_tooltip();
+										$( window ).resize( init_tooltip );
+						
+										var remove_tooltip = function()
+										{
+												tooltip.animate( { top: '-=10', opacity: 0 }, 50, function()
+												{
+														$( this ).remove();
+												});
+						
+												target.attr( 'title', tip );
+										};
+						
+										target.bind( 'mouseleave', remove_tooltip );
+										tooltip.bind( 'click', remove_tooltip );
+								});
 						});
-			
-						target.attr( 'title', tip );
-					};
-			
-					target.bind( 'mouseleave', remove_tooltip );
-					tooltip.bind( 'click', remove_tooltip );
-				});
-			});
 
-   
-	  </script>
-	  <script src="js/popper.min.js"></script>
-	  <script src="js/bootstrap.min.js"></script>
-	  </body>
+	 
+			</script>
+			<script src="js/popper.min.js"></script>
+			<script src="js/bootstrap.min.js"></script>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+			</body>
 </html>
-		

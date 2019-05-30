@@ -70,7 +70,7 @@
 					</div>
 					<div class="form-group">
 						<input id="guardar" name="guardar"  type="submit" value="Guardar Informacion" class="btn btn-primary">
-						<input id="continuar" name= "continuar"  type="submit" value="Mandar a Rechazo" class="btn btn-primary">
+						<input id="continuar" name= "continuar"  type="submit" value="Mandar a Rechazo" class="btn btn-danger">
 					</div>
 				</form>';
 //-----------------------------VALIDACION DEL OXIDO/CANTO OK---NO-OK-----------------------------------------//

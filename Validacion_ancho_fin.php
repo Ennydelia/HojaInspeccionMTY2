@@ -57,7 +57,7 @@
 										echo '<tr>
 														<td></td>
 														<td><input type="hidden" name="campo" value=" VAL_FIN_ANCHO"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;
-														<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td>
+														<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td>
 														</tr>
 													</table></form>';
 //-------------------------------------AQUI VA EL SCRIPT DE VALIDACION-------------------------
@@ -196,58 +196,56 @@
 		//alert("¡Haz denegado el mensaje!");
 		}
 	}
-//RESTABLECER TODO CON LA CLAVE DE USUARIO DE INSPECTORES 
-  function Liberar() {
-    $.confirm({
-    title: 'Desbloqueo',
-  content: '' +
-  '<form action="" class="formName">' +
-  '<div class="form-group">' +
-  '<label>Porfavor Escriba la clave</label>' +
-  '<input type="password" placeholder="clave" class="name form-control" required />' +
-  '</div>' +
-   '</form>',
-  buttons: {
-  formSubmit: {
-   text: 'Submit',
-btnClass: 'btn-blue',
-action: function () {
-var name = this.$content.find('.name').val();
-          //CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-if(name == 'Inspectores2019' || name == 'Calidad2019') {
-$.alert('Datos desbloqueados');
-          var validator = $( "#campovalidar" ).validate();
-          validator.resetForm();
-          $("#continuar").hide();
-          $("#siguiente").show();
-          $("#liberar").hide();
-          // $("#campovalidar").removeAttr("readonly");
-          // $("#campovalidar")[0].reset(); 
-}
-          else{
-            $.alert('Clave incorrecta');
-return false;
-}
-        }
-},
-cancel: function () {
-//close
-},
-},
-onContentReady: function () {
-// bind to events
-  var jc = this;
-this.$content.find('form').on('submit', function (e) {
-   // if the user submits the form by pressing enter in the field.
-e.preventDefault();
-jc.$$formSubmit.trigger('click'); // reference the button and click it
-});
-}
-  });
+	function Liberar() {
+		$.confirm({
+  		title: 'Desbloquear informacion',
+    	content: '' +
+    	'<form action="" class="formName">' +
+    	'<div class="form-group">' +
+    	'<label>Porfavor escriba la clave:</label>' +
+    	'<input type="password" placeholder="clave" class="name form-control" required />' +
+    	'</div>' +
+   		'</form>',
+    	buttons: {
+      	formSubmit: {
+      	  text: 'Aceptar',
+          btnClass: 'btn-red',
+          action: function () {
+          var name = this.$content.find('.name').val();
+					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
+          if(name == 'Inspectores2019' || name == 'Calidad2019') {
+            $.alert('Datos desbloqueados');
+					var validator = $( "#campovalidar" ).validate();
+					validator.resetForm();
+					$("#continuar").hide();
+					$("#siguiente").show();
+					$("#liberar").hide();
+					// $("#campovalidar").removeAttr("readonly");
+					// $("#campovalidar")[0].reset();	
+          }
+					else{
+						$.alert('Clave incorrecta');
+            return false;
+          }
+				}
+      },
+      cancel: function () {
+      //close
+      },
+    },
+    onContentReady: function () {
+    // bind to events
+    	var jc = this;
+      this.$content.find('form').on('submit', function (e) {
+      	 // if the user submits the form by pressing enter in the field.
+        e.preventDefault();
+        jc.$$formSubmit.trigger('click'); // reference the button and click it
+      });
+    }
+	});
 }
 	
-	
-//---------------------------------------------SECCION TOOLTIP----------------------------------------------------------
+					
 					 $( function()
 						{
 								var targets = $( '[rel~=tooltip]' ),
@@ -329,5 +327,7 @@ jc.$$formSubmit.trigger('click'); // reference the button and click it
 			</script>
 			<script src="js/popper.min.js"></script>
 			<script src="js/bootstrap.min.js"></script>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 			</body>
 </html>

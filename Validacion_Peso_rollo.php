@@ -159,8 +159,8 @@
 				e.preventDefault();
 				var actionurl = e.currentTarget.action;
 				console.log($("#campovalidar").serialize());
-				//var isvalid = $("#campovalidar").valid();
-				//if (isvalid) {
+				var isvalid = $("#campovalidar").valid();
+				if (isvalid) {
 					$.ajax({
 						url: "insert_valores2.php",
 						type: 'post',
@@ -184,7 +184,7 @@
 						}
 					}
 				});
-			//}
+			}
 		});
 	});
 						
@@ -228,18 +228,18 @@
 	//RESTABLECER TODO CON LA CLAVE DE USUARIO DE INSPECTORES 
 	function Liberar() {
 		$.confirm({
-  		title: 'Desbloqueo',
+			title: 'Desbloquear informacion',
     	content: '' +
     	'<form action="" class="formName">' +
     	'<div class="form-group">' +
-    	'<label>Porfavor Escriba la clave</label>' +
+    	'<label>Porfavor escriba la clave:</label>' +
     	'<input type="password" placeholder="clave" class="name form-control" required />' +
     	'</div>' +
    		'</form>',
     	buttons: {
       	formSubmit: {
-      	  text: 'Submit',
-          btnClass: 'btn-blue',
+      	  text: 'Aceptar',
+          btnClass: 'btn-red',
           action: function () {
           var name = this.$content.find('.name').val();
 					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 

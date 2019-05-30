@@ -214,18 +214,18 @@
 	//RESTABLECER TODO CON LA CLAVE DE USUARIO DE INSPECTORES 
 	function Liberar() {
 		$.confirm({
-  		title: 'Desbloqueo',
+  		title: 'Desbloquear informacion',
     	content: '' +
     	'<form action="" class="formName">' +
     	'<div class="form-group">' +
-    	'<label>Porfavor Escriba la clave</label>' +
+    	'<label>Porfavor escriba la clave:</label>' +
     	'<input type="password" placeholder="clave" class="name form-control" required />' +
     	'</div>' +
    		'</form>',
     	buttons: {
       	formSubmit: {
-      	  text: 'Submit',
-          btnClass: 'btn-blue',
+      	  text: 'Aceptar',
+          btnClass: 'btn-red',
           action: function () {
           var name = this.$content.find('.name').val();
 					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
