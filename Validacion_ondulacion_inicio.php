@@ -19,8 +19,6 @@
 									$conn = odbc_connect("Driver={SQL Server};Server=".$server2.";", $user2,$pass2);
 															if (!$conn)
 																die ("conexionerror");
-
-								
 												 $consulta = "select top 1 MACHINE_CD existe_wo from openquery(hgdb,'select MACHINE_CD from WK04_WO_HEADER where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."'' ')";
 													$resultado = odbc_do($conn, $consulta); 
 													while (odbc_fetch_row($resultado)) {
@@ -39,6 +37,10 @@
 																			$resultado = odbc_do($conn, $consulta);
 																			echo "<center><h4> VALIDACION ONDULACION INICIO</center>";	
 																			echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
+																			echo "<input name='liberar' id='liberar' type='submit' class='btn btn-warning' style='float:right; display:none;' value='Liberar' onclick='Liberar()'>";
+																			echo '</br>';
+																			echo '</br>';
+																
 																			//aqui cambiar los IDs
 																			echo '<form id="campovalidar" action="" method="post">';
 																			echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>INICIO ONDULACION</th></tr>';
@@ -48,14 +50,20 @@
 																					$count++;
 																			}
 																			//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
-																			echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ONDULACION_INI"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
+																			echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ONDULACION_INI"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
 
 																			//AQUI VA EL SCRIPT DE VALIDACION;
 																		 echo" <script>
 																					$(document).ready(function () {
 																						$('#campovalidar').validate({ 
-																								errorClass: 'invalid',
-																								validClass: 'success',
+																							errorClass: 'invalid',
+																							validClass: 'success',
+																							errorPlacement: function(){
+																								$('#liberar').show();
+																								$('#continuar').show();
+																								$('#siguiente').hide();
+																								
+																								},
 																								rules: {";
 
 																								$consulta = "SELECT BOM_NO,  convert(varchar(20),ONDULACIONES) ONDUACION, VAL_ONDULACION_INI FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
@@ -201,18 +209,57 @@ $(function() {
 							//alert("¡Haz denegado el mensaje!");
 							}
 						}
-							$("#campovalidar").on('change', function() {
-    							var isvalid = $("#campovalidar").valid();
-    							if (isvalid) {
-        						$("#continuar").hide();
-									$("#siguiente").show();
-   								} else {
-        						$('#siguiente').hide();
-        						$('#continuar').show();
-    							}
-								});		
-
-
+						//RESTABLECER TODO CON LA CLAVE DE USUARIO DE INSPECTORES 
+						function Liberar() {
+		$.confirm({
+			title: 'Desbloquear informacion',
+    	content: '' +
+    	'<form action="" class="formName">' +
+    	'<div class="form-group">' +
+    	'<label>Porfavor escriba la clave:</label>' +
+    	'<input type="password" placeholder="clave" class="name form-control" required />' +
+    	'</div>' +
+   		'</form>',
+			 buttons: {
+      	formSubmit: {
+      	  text: 'Aceptar',
+          btnClass: 'btn-red',
+          action: function () {
+          var name = this.$content.find('.name').val();
+					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
+          if(name == 'Inspectores2019' || name == 'Calidad2019') {
+            $.alert('Datos desbloqueados');
+					var validator = $( "#campovalidar" ).validate();
+					validator.resetForm();
+					$("#continuar").hide();
+					$("#siguiente").show();
+					$("#liberar").hide();
+					// $("#campovalidar").removeAttr("readonly");
+					// $("#campovalidar")[0].reset();	
+          }
+					else{
+						$.alert('Clave incorrecta');
+            return false;
+          }
+				}
+      },
+      cancel: function () {
+      //close
+      },
+    },
+    onContentReady: function () {
+    // bind to events
+    	var jc = this;
+      this.$content.find('form').on('submit', function (e) {
+      	 // if the user submits the form by pressing enter in the field.
+        e.preventDefault();
+        jc.$$formSubmit.trigger('click'); // reference the button and click it
+      });
+    }
+	});
+}
+	
+					
 					 $( function()
 						{
 								var targets = $( '[rel~=tooltip]' ),
@@ -294,5 +341,7 @@ $(function() {
 			</script>
 			<script src="js/popper.min.js"></script>
 			<script src="js/bootstrap.min.js"></script>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 			</body>
 </html>

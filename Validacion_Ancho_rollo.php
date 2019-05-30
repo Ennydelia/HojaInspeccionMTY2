@@ -41,9 +41,15 @@
 										$resultado = odbc_do($conn, $consulta); 
 										//echo "<center>WO: ". strtoupper($_GET["wo"])."</center>";
 										//--- CREAMOS LA TABLA PARA PODER ACOMODAR LOS DATOS
-										echo '<form id="campovalidar" action="" method="post">';
+										
 										echo '<center><h4>DATOS DEL ROLLO RECIBIDO</h4></center>';
 										echo "<center><h4>WO: ". strtoupper($_GET["wo"])."<h4></center>";
+										echo "<input name='liberar' id='liberar' type='submit' class='btn btn-warning' style='float:right; display:none;' value='Liberar' onclick='Liberar()'>";
+										echo '</br>';
+										echo '</br>';   
+										echo '</br>';
+										echo '<form id="campovalidar" action="" method="post">';
+										
 										//echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="1">ROLLO MADRE:</th><th>PESO</th><th>ANCHO</th><th>ESPESOR</th></tr>';
 										$count = 1;
 										while (odbc_fetch_row($resultado)) {
@@ -52,13 +58,20 @@
 											$count++;
 										}
 										//--- SE CREA EL BOTON DE CONTINUAR ---
-										echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ANCHO_INI"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
+										echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ANCHO_INI"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
 										//--- INICIAMOS VALIDACION DE LOS 3 CAMPOS ---
 										echo" <script>
 											$(document).ready(function () {
 												$('#campovalidar').validate({ 
 													errorClass: 'invalid',
 													validClass: 'success',
+													errorPlacement: function(){
+														$('#liberar').show();
+														$('#continuar').show();
+														$('#siguiente').hide();
+														
+														},
+							 
 													rules: {";
 														$consulta = "SELECT MOTHER_BOM,  convert(varchar(20), MIN_PESO_INI) MIN_PESO_INI,  convert(varchar(20), MAX_PESO_INI) MAX_PESO_INI, VAL_PESO_INI, convert(varchar(20), MIN_ANCHO_INI) MIN_ANCHO_INI,  convert(varchar(20), MAX_ANCHO_INI) MAX_ANCHO_INI, VAL_ANCHO_INI,convert(varchar(20), ESPESOR_INI) ESPESOR_INI, VAL_ESPESOR_INI FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RM] WHERE MOTHER_BOM = '".strtoupper($_GET["bom"])."'";
 														$resultado = odbc_do($conn, $consulta); 
@@ -198,18 +211,56 @@
 						
 							
 						}
-							$("#campovalidar").on('change', function() {
-    							var isvalid = $("#campovalidar").valid();
-    							if (isvalid) {
-        						$("#continuar").hide();
-									$("#siguiente").show();
-   								} else {
-        						$('#siguiente').hide();
-        						$('#continuar').show();
-    							}
-								});
-					
-					
+	//RESTABLECER TODO CON LA CLAVE DE USUARIO DE INSPECTORES 
+	function Liberar() {
+		$.confirm({
+  		title: 'Desbloquear informacion',
+    	content: '' +
+    	'<form action="" class="formName">' +
+    	'<div class="form-group">' +
+    	'<label>Porfavor escriba la clave:</label>' +
+    	'<input type="password" placeholder="clave" class="name form-control" required />' +
+    	'</div>' +
+   		'</form>',
+    	buttons: {
+      	formSubmit: {
+      	  text: 'Aceptar',
+          btnClass: 'btn-red',
+          action: function () {
+          var name = this.$content.find('.name').val();
+					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
+          if(name == 'Inspectores2019' || name == 'Calidad2019') {
+            $.alert('Datos desbloqueados');
+					var validator = $( "#campovalidar" ).validate();
+					validator.resetForm();
+					$("#continuar").hide();
+					$("#siguiente").show();
+					$("#liberar").hide();
+					// $("#campovalidar").removeAttr("readonly");
+					// $("#campovalidar")[0].reset();	
+          }
+					else{
+						$.alert('Clave incorrecta');
+            return false;
+          }
+				}
+      },
+      cancel: function () {
+      //close
+      },
+    },
+    onContentReady: function () {
+    // bind to events
+    	var jc = this;
+      this.$content.find('form').on('submit', function (e) {
+      	 // if the user submits the form by pressing enter in the field.
+        e.preventDefault();
+        jc.$$formSubmit.trigger('click'); // reference the button and click it
+      });
+    }
+	});
+}
+//--------------------------------------------------------------------------------------------				
 	$( function(){
 		var targets = $( '[rel~=tooltip]' ),
 		target  = false,
@@ -268,6 +319,8 @@
 	</script>
 	<script src="js/popper.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 	</body>
 </html>
 

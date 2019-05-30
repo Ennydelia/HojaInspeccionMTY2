@@ -1,63 +1,66 @@
 <!DOCTYPE HTML>
 <html lang="es">
-	 <head>
-			<title>Hoja de Inspeccion SLT2</title>
-			<!-- Required meta tags -->
-			<meta charset="utf-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-			<?php include("php/Pagina_inicio.php"); ?>
-			<!-- ---------------------------------------------------------- -->
-			<div class="container-fluid">
-		 
-				 <div class="row">
-						<div class= "col-lg-12 col-md-12 col-sm-12">
-							 <?php
+<head>
+	<title>Hoja de Inspeccion SLT2</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<?php include("php/Pagina_inicio.php"); ?>
+	<!-- ---------------------------------------------------------- -->
+	<div class="container-fluid">
+		<div class="row">
+			<div class= "col-lg-12 col-md-12 col-sm-12">
+				<?php
+					include("php/variables.php");
+					$_GET["wo"] = str_replace(" ","",$_GET["wo"]);
+					$_GET["bom"] = str_replace(" ","",$_GET["bom"]);
+					$conn = odbc_connect("Driver={SQL Server};Server=".$server2.";", $user2,$pass2);
+					if (!$conn)
+						die ("conexionerror");						
+					$consulta = "select top 1 MACHINE_CD existe_wo from openquery(hgdb,'select MACHINE_CD from WK04_WO_HEADER where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."'' ')";
+					$resultado = odbc_do($conn, $consulta); 
+					while (odbc_fetch_row($resultado)) {
+						$maquina = odbc_result($resultado, 1);//ESTA ES LA MAQUINA DONDE SE CORTA SLITTER SE MIDE AL PRINCIPIO Y AL FINAL
+						odbc_do($conn, $consulta);
+						$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and FINAL_CHECK is NULL or FINAL_CHECK = 0 AND MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
+						$resultado = odbc_do($conn, $consulta);	
+						while (odbc_fetch_row($resultado)) {
+							$FORMER_BOM = odbc_result($resultado, 1);
+							$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_CAMBER_FIN is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
+							$resultado = odbc_do($conn, $consulta);	
+							while (odbc_fetch_row($resultado)) {
+								if(odbc_result($resultado, 1) <> "0"){//SI HAY NULOS MUESTRA LOS CAMPOS PARA LLENAR VALORES
+									$consulta = "SELECT BOM_NO, convert(varchar(20), 0) C1,  convert(varchar(20), CAMBER) C2, VAL_CAMBER_FIN FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."'  order by PROD_LINE_NO, BOM_NO";
+									//ND (((MIN_ANCHO + MAX_ANCHO) / 2) <= 200 OR CLIENTE LIKE '%EUROTRANCIATURA%' OR CLIENTE LIKE '%SIEMENS%' )
+									$resultado = odbc_do($conn, $consulta);
+									echo "<center><h4>VALIDACION FINAL CAMBER</h4></center>";	
+									echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
+									echo "<input name='liberar' id='liberar' type='submit' class='btn btn-warning' style='float:right; display:none;' value='Liberar' onclick='Liberar()'>";
+									echo '</br>';
+									echo '</br>';
+									//aqui cambiar los IDs
+									echo '<form id="campovalidar" action="" method="post">';
+									echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>CAMBER</th></tr>';
+									$count = 1;
+									while (odbc_fetch_row($resultado)) {
+										echo '<tr><td><abbr title="< '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
+										$count++;
+									}
+							//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
+									echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_CAMBER_FIN"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
 
-									include("php/variables.php");
-									$_GET["wo"] = str_replace(" ","",$_GET["wo"]);
-									$_GET["bom"] = str_replace(" ","",$_GET["bom"]);
-									$conn = odbc_connect("Driver={SQL Server};Server=".$server2.";", $user2,$pass2);
-															if (!$conn)
-																die ("conexionerror");
-
-								
-												 $consulta = "select top 1 MACHINE_CD existe_wo from openquery(hgdb,'select MACHINE_CD from WK04_WO_HEADER where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."'' ')";
-													$resultado = odbc_do($conn, $consulta); 
-													while (odbc_fetch_row($resultado)) {
-															$maquina = odbc_result($resultado, 1);//ESTA ES LA MAQUINA DONDE SE CORTA SLITTER SE MIDE AL PRINCIPIO Y AL FINAL
-
-
-															odbc_do($conn, $consulta);
-															$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and FINAL_CHECK is NULL or FINAL_CHECK = 0 AND MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
-															$resultado = odbc_do($conn, $consulta);	
-															while (odbc_fetch_row($resultado)) {
-																$FORMER_BOM = odbc_result($resultado, 1);
-																$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_CAMBER_FIN is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
-																$resultado = odbc_do($conn, $consulta);	
-																while (odbc_fetch_row($resultado)) {
-																	if(odbc_result($resultado, 1) <> "0"){//SI HAY NULOS MUESTRA LOS CAMPOS PARA LLENAR VALORES
-																			$consulta = "SELECT BOM_NO, convert(varchar(20), 0) C1,  convert(varchar(20), CAMBER) C2, VAL_CAMBER_FIN FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."'  order by PROD_LINE_NO, BOM_NO";
-																			//ND (((MIN_ANCHO + MAX_ANCHO) / 2) <= 200 OR CLIENTE LIKE '%EUROTRANCIATURA%' OR CLIENTE LIKE '%SIEMENS%' )
-																			$resultado = odbc_do($conn, $consulta);
-																			echo "<center><h4>VALIDACION FINAL CAMBER</h4></center>";	
-																			echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
-																			//aqui cambiar los IDs
-																			echo '<form id="campovalidar" action="" method="post">';
-																			echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>CAMBER</th></tr>';
-																			$count = 1;
-																			while (odbc_fetch_row($resultado)) {
-																					echo '<tr><td><abbr title="< '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
-																					$count++;
-																			}
-																			//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
-																			echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_CAMBER_FIN"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
-
-																			//AQUI VA EL SCRIPT DE VALIDACION;
-																		 echo" <script>
-																					$(document).ready(function () {
-																						$('#campovalidar').validate({ 
-																								errorClass: 'invalid',
-																								validClass: 'success',
+									//AQUI VA EL SCRIPT DE VALIDACION;
+								 echo" <script>
+											$(document).ready(function () {
+												$('#campovalidar').validate({ 
+													errorClass: 'invalid',
+													validClass: 'success',
+													errorPlacement: function(){
+														$('#liberar').show();
+														$('#continuar').show();
+														$('#siguiente').hide();
+														
+														},
 																								rules: {";
 
 																								$consulta = "SELECT BOM_NO, convert(varchar(20), 0) C1,  convert(varchar(20), CAMBER) C2, VAL_CAMBER_FIN FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
@@ -208,16 +211,56 @@ function PagRec() {
 	//alert("¡Haz denegado el mensaje!");
 	}
 }
-$("#campovalidar").on('change', function() {
-	var isvalid = $("#campovalidar").valid();
-	if (isvalid) {
-		$("#continuar").hide();
-		$("#siguiente").show();
-	} else {
-		$('#siguiente').hide();
-		$('#continuar').show();
- }
-});   
+function Liberar() {
+		$.confirm({
+			title: 'Desbloquear informacion',
+    	content: '' +
+    	'<form action="" class="formName">' +
+    	'<div class="form-group">' +
+    	'<label>Porfavor escriba la clave:</label>' +
+    	'<input type="password" placeholder="clave" class="name form-control" required />' +
+    	'</div>' +
+   		'</form>',
+    	buttons: {
+      	formSubmit: {
+      	  text: 'Aceptar',
+          btnClass: 'btn-red',
+          action: function () {
+          var name = this.$content.find('.name').val();
+					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
+          if(name == 'Inspectores2019' || name == 'Calidad2019') {
+            $.alert('Datos desbloqueados');
+					var validator = $( "#campovalidar" ).validate();
+					validator.resetForm();
+					$("#continuar").hide();
+					$("#siguiente").show();
+					$("#liberar").hide();
+					// $("#campovalidar").removeAttr("readonly");
+					// $("#campovalidar")[0].reset();	
+          }
+					else{
+						$.alert('Clave incorrecta');
+            return false;
+          }
+				}
+      },
+      cancel: function () {
+      //close
+      },
+    },
+    onContentReady: function () {
+    // bind to events
+    	var jc = this;
+      this.$content.find('form').on('submit', function (e) {
+      	 // if the user submits the form by pressing enter in the field.
+        e.preventDefault();
+        jc.$$formSubmit.trigger('click'); // reference the button and click it
+      });
+    }
+	});
+}
+	
+					
 					 $( function()
 						{
 								var targets = $( '[rel~=tooltip]' ),
@@ -299,5 +342,7 @@ $("#campovalidar").on('change', function() {
 			</script>
 			<script src="js/popper.min.js"></script>
 			<script src="js/bootstrap.min.js"></script>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 			</body>
 </html>

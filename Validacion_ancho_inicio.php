@@ -16,50 +16,57 @@
 				  $_GET["wo"] = str_replace(" ","",$_GET["wo"]);
 				  $_GET["bom"] = str_replace(" ","",$_GET["bom"]);
 				  $conn = odbc_connect("Driver={SQL Server};Server=".$server2.";", $user2,$pass2);
-							  if (!$conn)
-								die ("conexionerror");
-				
-						 $consulta = "select top 1 MACHINE_CD existe_wo from openquery(hgdb,'select MACHINE_CD from WK04_WO_HEADER where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."'' ')";
-						  $resultado = odbc_do($conn, $consulta); 
-						  while (odbc_fetch_row($resultado)) {
-						  $maquina = odbc_result($resultado, 1);
-
+						if (!$conn)
+						die ("conexionerror");
+					 	$consulta = "select top 1 MACHINE_CD existe_wo from openquery(hgdb,'select MACHINE_CD from WK04_WO_HEADER where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."'' ')";
+					 	$resultado = odbc_do($conn, $consulta); 
+					 	while (odbc_fetch_row($resultado)) {
+					 		$maquina = odbc_result($resultado, 1);
 							$consulta4 = "EXEC[MTY_PROD_SSM].[dbo].[SP_INSPECCION_ONDULACIONES] @WO_NO = '". strtoupper($_GET["wo"]) ."'";
-            				$resultado5 = odbc_do($conn, $consulta4);
-                       	
+            	$resultado5 = odbc_do($conn, $consulta4);           	
 							$consulta = "select ISNULL(MOTHER_BOM, 'BALANCE') AS MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."'and FINAL_CHECK is NULL or FINAL_CHECK = 0 and  MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
-							  $resultado = odbc_do($conn, $consulta);  
-							  $yavalidado = 1;
-							  while (odbc_fetch_row($resultado)) {
-									$yavalidado = 0;
-									$FORMER_BOM = odbc_result($resultado, 1);
-									$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_INI_ANCHO is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
-									$resultado = odbc_do($conn, $consulta); 
-									while (odbc_fetch_row($resultado)) {
-									  if(odbc_result($resultado, 1) <> "0"){//SI HAY NULOS MUESTRA LOS CAMPOS PARA LLENAR VALORES
-										  $consulta = "SELECT ISNULL(BOM_NO, '') AS BOM_NO,  convert(varchar(20),MIN_ANCHO) MIN_ANCHO,  convert(varchar(20),MAX_ANCHO) MAX_ANCHO, VAL_INI_ANCHO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
-									  	$resultado = odbc_do($conn, $consulta); 
-									  	echo "<center><h4>VALIDACION INICIO ANCHO</h4></center>";
-									  	echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
-									  	//aqui cambiar los IDs
-									  	echo '<form id="campovalidar" action="" method="post">';
-									  	echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>INICIO ANCHO</th></tr>';
-									  	$count = 1;
-									   	while (odbc_fetch_row($resultado)) {
-											  echo '<tr><td><abbr title="'.odbc_result($resultado, 2).' - '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
-										  	$count++;
-									  	} 
+							$resultado = odbc_do($conn, $consulta);  
+							$yavalidado = 1;
+							while (odbc_fetch_row($resultado)) {
+								$yavalidado = 0;
+								$FORMER_BOM = odbc_result($resultado, 1);
+								$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_INI_ANCHO is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
+								$resultado = odbc_do($conn, $consulta); 
+								while (odbc_fetch_row($resultado)) {
+								  if(odbc_result($resultado, 1) <> "0"){//SI HAY NULOS MUESTRA LOS CAMPOS PARA LLENAR VALORES
+									  $consulta = "SELECT ISNULL(BOM_NO, '') AS BOM_NO,  convert(varchar(20),MIN_ANCHO) MIN_ANCHO,  convert(varchar(20),MAX_ANCHO) MAX_ANCHO, VAL_INI_ANCHO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
+								  	$resultado = odbc_do($conn, $consulta); 
+								  	echo "<center><h4>VALIDACION INICIO ANCHO</h4></center>";
+										echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
+										echo "<input name='liberar' id='liberar' type='submit' class='btn btn-warning' style='float:right; display:none;' value='Liberar' onclick='Liberar()'>";
+										echo '</br>';
+										echo '</br>';
+										echo '</br>';
+								  	//aqui cambiar los IDs
+										echo '<form id="campovalidar" action="" method="post">';
+										
+								  	echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>INICIO ANCHO</th></tr>';
+								  	$count = 1;
+								   	while (odbc_fetch_row($resultado)) {
+											echo '<tr><td><abbr title="'.odbc_result($resultado, 2).' - '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td>
+											<td><input style="width:100px;" autocomplete="off" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
+									  	$count++;
+								  	} 
 								  	//AQUI SE CAMBIA EL CAMPO A INSERTAR
-									 		echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_INI_ANCHO"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
-
+								 		echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_INI_ANCHO"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
 									  //AQUI VA EL SCRIPT DE VALIDACION;
-											echo" <script>
-										  $(document).ready(function () {
+										echo" <script>
+										$(document).ready(function () {
 											$('#campovalidar').validate({ 
 												errorClass: 'invalid',
 												validClass: 'success',
-												rules: {";
-
+												errorPlacement: function(){
+													$('#liberar').show();
+													$('#continuar').show();
+													$('#siguiente').hide();
+													
+													},
+													rules: {";
 													$consulta = "SELECT BOM_NO,  convert(varchar(20),MIN_ANCHO) MIN_ANCHO,  convert(varchar(20),MAX_ANCHO) MAX_ANCHO, VAL_INI_ANCHO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
 													$resultado = odbc_do($conn, $consulta); 
 													$count = 1;
@@ -67,70 +74,60 @@
 														echo "".odbc_result($resultado, 1).": {
 															required: true,
 															min: ".odbc_result($resultado, 2).",
-															max: ".odbc_result($resultado, 3)."
+															max: ".odbc_result($resultado, 3).",	
 														},";
 														$count++;
 													}
-
+													
 													echo  "extra: {
 														required: true
-													}
-												},";
+													},
+												},
+													";
 												echo "messages: {";
-												$consulta = "SELECT BOM_NO,  convert(varchar(20),MIN_ANCHO) MIN_ANCHO,  convert(varchar(20),MAX_ANCHO) MAX_ANCHO, VAL_INI_ANCHO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
-												$resultado = odbc_do($conn, $consulta); 
-												while (odbc_fetch_row($resultado)) {
-													echo "".odbc_result($resultado, 1).": '',";
-												}
-												echo "extra: ''
-												}
-
-												});
-												
-										  });
-							  </script>";
-								  }
-								  else{
-									  //REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
-									  header("Location: Validacion_espesor_inicio.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
-									  die();
-
-								  }
-
+													$consulta = "SELECT BOM_NO,  convert(varchar(20),MIN_ANCHO) MIN_ANCHO,  convert(varchar(20),MAX_ANCHO) MAX_ANCHO, VAL_INI_ANCHO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
+													$resultado = odbc_do($conn, $consulta); 
+													while (odbc_fetch_row($resultado)) {
+														echo "".odbc_result($resultado, 1).": '',";
+													}
+													echo "extra: ''
+												},												
+											});	
+										});
+									</script>";
+							
 								}
-							  }
-							  if($yavalidado == 1){
-									header("Location: datos_validados.php?wo=".$_GET["wo"]);
-								die();
-							  }
-						  }
-					 
+								else{
+									//REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
+									header("Location: Validacion_espesor_inicio.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+									die();
+								}
+							}
+						}
+						if($yavalidado == 1){
+							header("Location: datos_validados.php?wo=".$_GET["wo"]);
+							die();
+						}
+					} 
 				?>
 			</div>
-		  </div>
 		</div>
-		 <!-- ---------------------------------------------------------- -->
-
-	  <!-- Optional JavaScript -->
-	  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-	  <script src="js/pikaday.js"></script>
-	  <link href="css/speech-input.css" rel="stylesheet">
-	  <script src="js/speech-input.js"></script>
-	  <script>
-	  
+	</div>
 	
-		 $(document).ready(function()
-		   {
-			   $('#bodymain').loading('stop');
-		   });
-		 
-
-
-		   $("input[type='number']").on("click", function () {
-			  $(this).select();
-			});
-
-$(function() {
+	<!-- ---------------------------------------------------------- -->
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="js/pikaday.js"></script>
+	<link href="css/speech-input.css" rel="stylesheet">
+	<script src="js/speech-input.js"></script>
+	<script>  
+		$(document).ready(function(){
+			$('#bodymain').loading('stop');
+		}); 
+		$("input[type='number']").on("click", function () {
+			$(this).select();
+		});
+		$(function() {
 			$("#campovalidar").submit(function(e) {
 				e.preventDefault();
 				var actionurl = e.currentTarget.action;
@@ -143,20 +140,17 @@ $(function() {
 						data: $("#campovalidar").serialize(),
 						success: function(data) {
 							var str = data;
-							var res = str.split(",");
-							  
+							var res = str.split(",");					  
 							  if(res[0]=="Error"){
 									toastr.error(res[1], 'Error', {timeOut: 5000, positionClass: "toast-top-center"})
 									$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
 							  }
-							  	else if(res[0]=="Warning"){
+							  else if(res[0]=="Warning"){
 									toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
 							  }
-							 	 else if(res[0]=="Ok"){
-									toastr.success(res[1], 'Datos correctos', {timeOut: 2500, positionClass: "toast-top-center"});
-			
-               			window.location.replace("Validacion_espesor_inicio.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-             			//}
+							 	else if(res[0]=="Ok"){
+									toastr.success(res[1], 'Datos correctos', {timeOut: 2500, positionClass: "toast-top-center"});		
+               		window.location.replace("Validacion_espesor_inicio.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
 								}
 							  else{
 									toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
@@ -164,76 +158,96 @@ $(function() {
 							}
 					  });
 					}
-					
-
-				  });
-
 				});
-		
+			});
 		//FUNCION QUE REDIRIGE A LA PAGINA DE RECHAOS INTERNOS
-						function PagRec() {
-						//Manda alerta para confirmar si desea mandar a rechazo interno	
-						var mensaje = confirm("Mandar a rechazo interno: ");
-						
-						if (mensaje) {
-								
+			function PagRec() {
+				//Manda alerta para confirmar si desea mandar a rechazo interno	
+				var mensaje = confirm("Mandar a rechazo interno: ");		
+					if (mensaje) {
 						$(function() {
-		
-
-								// $.post("enviar.php",$("#campovalidar").serialize(),function(res){
-								// e.preventDefault();
-								// var actionurl = e.currentTarget.action;
-								console.log($("#campovalidar").serialize());
-								//var isvalid = $("#campovalidar").valid();
-								//if (isvalid) {
+							console.log($("#campovalidar").serialize());
 								$.ajax({
 									url: "insert_valores.php",
 									type: 'post',
 									data: $("#campovalidar").serialize(),
 									success: function(data) {
-											var str = data;
-											var res = str.split(",");
-											
-											if(res[0]=="Error"){
-												toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
-												$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
-											}
-											else if(res[0]=="Warning"){
-												toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
-											}
-											else if(res[0]=="Ok"){
-												toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
-												window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
-												window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-											}
-											else{
-												toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
-											}
+										var str = data;
+										var res = str.split(",");				
+										if(res[0]=="Error"){
+											toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
+											$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
 										}
-									});
-								
+										else if(res[0]=="Warning"){
+											toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
+										}
+										else if(res[0]=="Ok"){
+											toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
+											window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
+											window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+										}
+										else{
+											toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
+										}
+									}
+								});
 							});		
-						}
-							
+						}		
 						else {
 							//alert("¡Haz denegado el mensaje!");
-							}
 						}
-							$("#campovalidar").on('change', function() {
-    							var isvalid = $("#campovalidar").valid();
-    							if (isvalid) {
-        						$("#continuar").hide();
-									$("#siguiente").show();
-   								} else {
-        						$('#siguiente').hide();
-        						$('#continuar').show();
-    							}
-								});
-					
-		
-
-		   $( function()
-			{
+					}
+//RESTABLECER TODO CON LA CLAVE DE USUARIO DE INSPECTORES 
+	function Liberar() {
+		$.confirm({
+			title: 'Desbloquear informacion',
+    	content: '' +
+    	'<form action="" class="formName">' +
+    	'<div class="form-group">' +
+    	'<label>Porfavor escriba la clave:</label>' +
+    	'<input type="password" placeholder="clave" class="name form-control" required />' +
+    	'</div>' +
+   		'</form>',
+    	buttons: {
+      	formSubmit: {
+      	  text: 'Aceptar',
+          btnClass: 'btn-red',
+          action: function () {
+          var name = this.$content.find('.name').val();
+					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
+          if(name == 'Inspectores2019' || name == 'Calidad2019') {
+            $.alert('Datos desbloqueados');
+					var validator = $( "#campovalidar" ).validate();
+					validator.resetForm();
+					$("#continuar").hide();
+					$("#siguiente").show();
+					$("#liberar").hide();
+					// $("#campovalidar").removeAttr("readonly");
+					// $("#campovalidar")[0].reset();	
+          }
+					else{
+						$.alert('Clave incorrecta');
+            return false;
+          }
+				}
+      },
+      cancel: function () {
+      //close
+      },
+    },
+    onContentReady: function () {
+    // bind to events
+    	var jc = this;
+      this.$content.find('form').on('submit', function (e) {
+      	 // if the user submits the form by pressing enter in the field.
+        e.preventDefault();
+        jc.$$formSubmit.trigger('click'); // reference the button and click it
+      });
+    }
+	});
+}
+//---------------------------------------------------------------------------------------------------//					
+		   	$( function(){
 				var targets = $( '[rel~=tooltip]' ),
 					target  = false,
 					tooltip = false,
@@ -313,6 +327,8 @@ $(function() {
 	  </script>
 	  <script src="js/popper.min.js"></script>
 	  <script src="js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 	  </body>
 </html>
 		

@@ -35,6 +35,11 @@
 										$resultado = odbc_do($conn, $consulta);	
 										echo "<center><h4>VALIDACION ANCHOS FINALES</h4></center>";
 										echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
+										echo "<input name='liberar' id='liberar' type='submit' class='btn btn-warning' style='float:right; display:none;' value='Liberar' onclick='Liberar()'>";
+										echo '</br>';
+										echo '</br>';   
+										echo '</br>';
+
 										echo '<form id="campovalidar" action="" method="post">';
 										echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>FIN ANCHO</th></tr>';
 										$count = 1;
@@ -52,7 +57,7 @@
 										echo '<tr>
 														<td></td>
 														<td><input type="hidden" name="campo" value=" VAL_FIN_ANCHO"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;
-														<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td>
+														<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td>
 														</tr>
 													</table></form>';
 //-------------------------------------AQUI VA EL SCRIPT DE VALIDACION-------------------------
@@ -61,6 +66,12 @@
 												$('#campovalidar').validate({ 
 													errorClass: 'invalid',
 													validClass: 'success',
+													errorPlacement: function(){
+														$('#liberar').show();
+														$('#continuar').show();
+														$('#siguiente').hide();       
+														},
+							 
 													rules: {";
 														$consulta = "SELECT BOM_NO,  convert(varchar(20),MIN_ANCHO) MIN_ANCHO,  convert(varchar(20),MAX_ANCHO) MAX_ANCHO,  VAL_FIN_ANCHO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
 														$resultado = odbc_do($conn, $consulta);	
@@ -185,18 +196,56 @@
 		//alert("¡Haz denegado el mensaje!");
 		}
 	}
-	$("#campovalidar").on('change', function() {
-		var isvalid = $("#campovalidar").valid();
-  	if (isvalid) {
-  		$("#continuar").hide();
-			$("#siguiente").show();
-  	} else {
-	  	$('#siguiente').hide();
-  		$('#continuar').show();
- 		}
-	});		
+	function Liberar() {
+		$.confirm({
+  		title: 'Desbloquear informacion',
+    	content: '' +
+    	'<form action="" class="formName">' +
+    	'<div class="form-group">' +
+    	'<label>Porfavor escriba la clave:</label>' +
+    	'<input type="password" placeholder="clave" class="name form-control" required />' +
+    	'</div>' +
+   		'</form>',
+    	buttons: {
+      	formSubmit: {
+      	  text: 'Aceptar',
+          btnClass: 'btn-red',
+          action: function () {
+          var name = this.$content.find('.name').val();
+					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
+          if(name == 'Inspectores2019' || name == 'Calidad2019') {
+            $.alert('Datos desbloqueados');
+					var validator = $( "#campovalidar" ).validate();
+					validator.resetForm();
+					$("#continuar").hide();
+					$("#siguiente").show();
+					$("#liberar").hide();
+					// $("#campovalidar").removeAttr("readonly");
+					// $("#campovalidar")[0].reset();	
+          }
+					else{
+						$.alert('Clave incorrecta');
+            return false;
+          }
+				}
+      },
+      cancel: function () {
+      //close
+      },
+    },
+    onContentReady: function () {
+    // bind to events
+    	var jc = this;
+      this.$content.find('form').on('submit', function (e) {
+      	 // if the user submits the form by pressing enter in the field.
+        e.preventDefault();
+        jc.$$formSubmit.trigger('click'); // reference the button and click it
+      });
+    }
+	});
+}
 	
-//---------------------------------------------SECCION TOOLTIP----------------------------------------------------------
+					
 					 $( function()
 						{
 								var targets = $( '[rel~=tooltip]' ),
@@ -278,5 +327,7 @@
 			</script>
 			<script src="js/popper.min.js"></script>
 			<script src="js/bootstrap.min.js"></script>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 			</body>
 </html>
