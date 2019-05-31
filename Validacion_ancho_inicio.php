@@ -64,7 +64,6 @@
 													$('#liberar').show();
 													$('#continuar').show();
 													$('#siguiente').hide();
-													
 													},
 													rules: {";
 													$consulta = "SELECT BOM_NO,  convert(varchar(20),MIN_ANCHO) MIN_ANCHO,  convert(varchar(20),MAX_ANCHO) MAX_ANCHO, VAL_INI_ANCHO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
@@ -78,7 +77,6 @@
 														},";
 														$count++;
 													}
-													
 													echo  "extra: {
 														required: true
 													},
@@ -123,13 +121,15 @@
 	<script>  
 		$(document).ready(function(){
 			$('#bodymain').loading('stop');
+	
 		}); 
 		$("input[type='number']").on("click", function () {
 			$(this).select();
 		});
+	
 		$(function() {
-			$("#campovalidar").submit(function(e) {
-				e.preventDefault();
+			$("#siguiente").click(function(e) {
+				// e.preventDefault();
 				var actionurl = e.currentTarget.action;
 				console.log($("#campovalidar").serialize());
 				var isvalid = $("#campovalidar").valid();
@@ -161,42 +161,75 @@
 				});
 			});
 		//FUNCION QUE REDIRIGE A LA PAGINA DE RECHAOS INTERNOS
-			function PagRec() {
-				//Manda alerta para confirmar si desea mandar a rechazo interno	
-				var mensaje = confirm("Mandar a rechazo interno: ");		
-					if (mensaje) {
+		function PagRec() {
+		$.confirm({
+			title: 'Mandar a Rechazo Interno',
+    	content: 'Para mandar a Rechazo es necesario proporcional la clave de acceso:' +
+    	'<form action="" class="formName">' +
+    	'<div class="form-group">' +
+    	'<label>Porfavor escriba la clave:</label>' +
+    	'<input type="password" placeholder="clave" class="name form-control" required />' +
+    	'</div>' +
+   		'</form>',
+    	buttons: {
+      	formSubmit: {
+      	  text: 'Aceptar',
+          btnClass: 'btn-red',
+          action: function () {
+          var name = this.$content.find('.name').val();
+					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
+          if(name == 'Inspectores2019' || name == 'Calidad2019') {
+            $.alert('Orden Madada a Rechazo');
 						$(function() {
-							console.log($("#campovalidar").serialize());
-								$.ajax({
-									url: "insert_valores.php",
-									type: 'post',
-									data: $("#campovalidar").serialize(),
-									success: function(data) {
-										var str = data;
-										var res = str.split(",");				
-										if(res[0]=="Error"){
-											toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
-											$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
-										}
-										else if(res[0]=="Warning"){
-											toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
-										}
-										else if(res[0]=="Ok"){
-											toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
-											window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
-											window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-										}
-										else{
-											toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
-										}
-									}
-								});
-							});		
-						}		
-						else {
-							//alert("¡Haz denegado el mensaje!");
+				console.log($("#campovalidar").serialize());
+				$.ajax({
+					url: "insert_rechazo2.php",
+					type: 'post',
+					data: $("#campovalidar").serialize(),
+					success: function(data) {
+						var str = data;
+						var res = str.split(",");							
+						if(res[0]=="Error"){
+							toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
+							$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
+						}
+						else if(res[0]=="Warning"){
+							toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
+						}
+						else if(res[0]=="Ok"){
+							toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
+							window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
+							window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+						}
+						else{
+							toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
 						}
 					}
+				});			
+			});		
+          }
+					else{
+						$.alert('Clave incorrecta');
+            return false;
+          }
+				}
+      },
+      cancel: function () {
+      //close
+      },
+    },
+    onContentReady: function () {
+    // bind to events
+    	var jc = this;
+      this.$content.find('form').on('submit', function (e) {
+      	 // if the user submits the form by pressing enter in the field.
+        e.preventDefault();
+        jc.$$formSubmit.trigger('click'); // reference the button and click it
+      });
+    }
+	});
+	
+	}
 //RESTABLECER TODO CON LA CLAVE DE USUARIO DE INSPECTORES 
 	function Liberar() {
 		$.confirm({

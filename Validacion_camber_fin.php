@@ -172,21 +172,34 @@ $(function() {
 
 								});
 //-----------------------------------------------SECCION DE RECHAZOS INTERNOS--------------------------------------
-
 function PagRec() {
-//Manda alerta para confirmar si desea mandar a rechazo interno 
-	var mensaje = confirm("Mandar a rechazo interno: ");        
-	if (mensaje) {              
-		$(function() {
-		
+		$.confirm({
+			title: 'Mandar a Rechazo Interno',
+    	content: 'Para mandar a Rechazo es necesario proporcional la clave de acceso:' +
+    	'<form action="" class="formName">' +
+    	'<div class="form-group">' +
+    	'<label>Porfavor escriba la clave:</label>' +
+    	'<input type="password" placeholder="clave" class="name form-control" required />' +
+    	'</div>' +
+   		'</form>',
+    	buttons: {
+      	formSubmit: {
+      	  text: 'Aceptar',
+          btnClass: 'btn-red',
+          action: function () {
+          var name = this.$content.find('.name').val();
+					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
+          if(name == 'Inspectores2019' || name == 'Calidad2019') {
+            $.alert('Orden Madada a Rechazo');
+						$(function() {
 				console.log($("#campovalidar").serialize());
 				$.ajax({
-					url: "insert_valores.php",
+					url: "insert_rechazo2.php",
 					type: 'post',
 					data: $("#campovalidar").serialize(),
 					success: function(data) {
 						var str = data;
-						var res = str.split(",");             
+						var res = str.split(",");							
 						if(res[0]=="Error"){
 							toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
 							$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
@@ -203,9 +216,30 @@ function PagRec() {
 							toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
 						}
 					}
-				});
-			
-		});   
+				});			
+			});		
+          }
+					else{
+						$.alert('Clave incorrecta');
+            return false;
+          }
+				}
+      },
+      cancel: function () {
+      //close
+      },
+    },
+    onContentReady: function () {
+    // bind to events
+    	var jc = this;
+      this.$content.find('form').on('submit', function (e) {
+      	 // if the user submits the form by pressing enter in the field.
+        e.preventDefault();
+        jc.$$formSubmit.trigger('click'); // reference the button and click it
+      });
+    }
+	});
+	
 	}
 	else {
 	//alert("¡Haz denegado el mensaje!");
