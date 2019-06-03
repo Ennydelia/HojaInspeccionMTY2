@@ -31,7 +31,11 @@
                 </div>
                   </div>
                    <div class="row">
+                   <div class= "col-lg-12 col-md-12 col-sm-12">
+                   <input id="cancelar" type="submit" value="Cancelar" class="btn btn-warning" tyle="float:right;" onclick="cancelar()">
+                   </div>
                     <div class= "col-lg-6 col-md-6 col-sm-6">
+                    
                       <div class="form-group">
                         <center><label>Lecturas en MPA</label></center>
                         <input type="hidden" name="MOTHER_BOM" value="'.$_GET['bom'].'">
@@ -164,6 +168,9 @@
                 </div>
                   </div>
                    <div class="row">
+                   <div class= "col-lg-12 col-md-12 col-sm-12">
+                   <input id="cancelar" type="submit" value="Cancelar" class="btn btn-warning" tyle="float:right;" onclick="cancelar()">
+                   </div>
                     <div class= "col-lg-6 col-md-6 col-sm-6">
                       <div class="form-group">
                         <center><label>Lecturas en MPA</label></center>
@@ -251,6 +258,9 @@
                 </div>
                   </div>
                    <div class="row">
+                   <div class= "col-lg-12 col-md-12 col-sm-12">
+                   <input id="cancelar" type="submit" value="Cancelar" class="btn btn-warning" tyle="float:right;" onclick="cancelar()">
+                   </div>
                     <div class= "col-lg-6 col-md-6 col-sm-6">
                       <div class="form-group">
                         <center><label>Lecturas en MPA</label></center>
@@ -338,6 +348,9 @@
                 </div>
                   </div>
                    <div class="row">
+                   <div class= "col-lg-12 col-md-12 col-sm-12">
+                   <input id="cancelar" type="submit" value="Cancelar" class="btn btn-warning" tyle="float:right;" onclick="cancelar()">
+                   </div>
                     <div class= "col-lg-6 col-md-6 col-sm-6">
                       <div class="form-group">
                         <center><label>Lecturas en MPA</label></center>
@@ -493,6 +506,21 @@
                   });
 
                 });
+$(function() {
+		$("#cancelar").click(function(e) {
+			e.preventDefault();
+			var actionurl = e.currentTarget.action;
+			var mensaje = confirm("¿Cancelar datos?");				
+			if (mensaje) {
+						window.location.replace("Validacion_ancho_fin.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+						}
+						else{
+						
+						}
+				
+				});
+		});
+
 
 
 
