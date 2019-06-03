@@ -49,18 +49,17 @@
 											echo '</br>';
                       //aqui cambiar los IDs
                       echo '<form id="campovalidar" action="" method="post">';
-                      echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th><th></th></tr><tr><th>BOM</th><th>MOTOR </th></th><th>OPERADOR </th></tr>';
+                      echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>MOTOR </th></tr>';
                       $count = 1;
                       while (odbc_fetch_row($resultado)) {
                         echo '<tr><td><abbr title="< '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td>';
-												echo '<td><input style="width:100px;" autocomplete="off" lang="es" type="number"  id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td>
-												<td><input style="width:100px;" autocomplete="off" lang="es" type="number"  id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 5).'">';
+                        echo '<td><input style="width:100px;" autocomplete="off" lang="es" type="number"  id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td>';
 
                         echo '</tr>';
                         $count++;
 										} 
 																			
-									 echo '<tr><td><input type="hidden" name="campo" value="VAL_INI_REBABA_MOTOR"><td><input type="hidden" name="campo2" value="VAL_INI_REBABA_OPERADOR"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td><td></td></tr></table></form>';
+									 echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_INI_REBABA_MOTOR"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
 
 									//AQUI VA EL SCRIPT DE VALIDACION;
 									 echo" <script>
@@ -85,7 +84,6 @@
 														min: ".odbc_result($resultado, 2).",
 														max: ".odbc_result($resultado, 3)."
 													},";
-													
 													$count++;
 												}
 
@@ -144,7 +142,7 @@
 				var isvalid = $("#campovalidar").valid();
 				if (isvalid) {
 					$.ajax({
-						url: "insert_valor.php",
+						url: "insert_valores.php",
 						type: 'post',
 						data: $("#campovalidar").serialize(),
 						success: function(data) {

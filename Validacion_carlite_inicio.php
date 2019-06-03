@@ -27,7 +27,7 @@
 									$resultado = odbc_do($conn, $consulta);	
 									while (odbc_fetch_row($resultado)) {
 										$FORMER_BOM = odbc_result($resultado, 1);
-										$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' and FINAL_CHECK is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
+										$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_CARLITE_INICIO is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
 										$resultado = odbc_do($conn, $consulta);
 										while (odbc_fetch_row($resultado)) {
 											if(odbc_result($resultado, 1) <> "0"){//SI HAY NULOS MUESTRA LOS CAMPOS PARA LLENAR VALORES
@@ -146,7 +146,7 @@
 											
 											else{
 												//REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
-			  								header("Location: Validacion2.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);                
+			  								header("Location: Validacion_ancho_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);                
 												die();
 											}
 										}	
@@ -283,10 +283,6 @@ function PagRec() {
 	});
 	
 	}
-	else {
-	//alert("¡Haz denegado el mensaje!");
-	}
-}
 function Liberar() {
 		$.confirm({
 			title: 'Desbloquear informacion',

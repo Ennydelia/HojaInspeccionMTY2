@@ -241,10 +241,6 @@ function PagRec() {
 	});
 	
 	}
-	else {
-	//alert("¡Haz denegado el mensaje!");
-	}
-}
 function Liberar() {
 		$.confirm({
 			title: 'Desbloquear informacion',
