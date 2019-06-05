@@ -50,7 +50,7 @@
 																			echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>NUMERO ONDAS</th></tr>';
 																			$count = 1;
 																			while (odbc_fetch_row($resultado)) {
-																					echo '<tr><td><abbr title="< '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
+																					echo '<tr><td><abbr title="< '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autofocus="on" autocomplete="off" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
 																					$count++;
 																			}
 																			//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V

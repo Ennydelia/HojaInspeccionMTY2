@@ -50,7 +50,7 @@
 								  	$count = 1;
 								   	while (odbc_fetch_row($resultado)) {
 											echo '<tr><td><abbr title="'.odbc_result($resultado, 2).' - '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td>
-											<td><input style="width:100px;" autocomplete="off" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
+											<td><input style="width:100px;" autocomplete="off" lang="es" autofocus="on"   type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
 									  	$count++;
 								  	} 
 								  	//AQUI SE CAMBIA EL CAMPO A INSERTAR

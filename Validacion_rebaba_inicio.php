@@ -48,7 +48,7 @@
                 $count = 1;
                 while (odbc_fetch_row($resultado)) {
 	                echo '<tr><td><abbr title="<'.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td>';
-									echo '<td><input style="width:100px;" autocomplete="off" lang="es" type="number"  id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td>';
+									echo '<td><input style="width:100px;" autocomplete="off" lang="es" type="number" autofocus="on" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td>';
 									echo '<td><input style="width:100px;" autocomplete="off" lang="es" type="number"  id="'.odbc_result($resultado, 6).'" name="'.odbc_result($resultado, 6).'" value="'.odbc_result($resultado, 5).'"></td>';
       	          echo '</tr>';
         	        $count++;

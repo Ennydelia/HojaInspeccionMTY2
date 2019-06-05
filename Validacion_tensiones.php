@@ -58,7 +58,7 @@
                     <div class= "col-lg-3 col-md-3 col-sm-3">
                       <div class="form-group">
                         <label for="TENSION_P_INI_1">Inicio</label>
-                       <input type="text" step="any" class="form-control" id="TENSION_P_INI_1" name="TENSION_P_INI_1" autocomplete="off" required>
+                       <input type="text" step="any" class="form-control" id="TENSION_P_INI_1" name="TENSION_P_INI_1" autocomplete="off" autofocus="on" required>
                       </div>
                     </div>
                     <div class= "col-lg-3 col-md-3 col-sm-3">
@@ -194,7 +194,7 @@
                     <div class= "col-lg-3 col-md-3 col-sm-3">
                       <div class="form-group">
                         <label for="TENSION_P_INI_2">Inicio</label>
-                       <input type="text" step="any" class="form-control" id="TENSION_P_INI_2" name="TENSION_P_INI_2" autocomplete="off" required>
+                       <input type="text" step="any" class="form-control" id="TENSION_P_INI_2" name="TENSION_P_INI_2" autofocus="on" autocomplete="off" required>
                       </div>
                     </div>
                     <div class= "col-lg-3 col-md-3 col-sm-3">
@@ -284,7 +284,7 @@
                     <div class= "col-lg-3 col-md-3 col-sm-3">
                       <div class="form-group">
                         <label for="TENSION_P_INI_3">Inicio</label>
-                       <input type="text" step="any" class="form-control" id="TENSION_P_INI_3" name="TENSION_P_INI_3" autocomplete="off" required>
+                       <input type="text" step="any" class="form-control" id="TENSION_P_INI_3" name="TENSION_P_INI_3" autofocus="on" autocomplete="off" required>
                       </div>
                     </div>
                     <div class= "col-lg-3 col-md-3 col-sm-3">
@@ -374,7 +374,7 @@
                     <div class= "col-lg-3 col-md-3 col-sm-3">
                       <div class="form-group">
                         <label for="TENSION_P_INI_4">Inicio</label>
-                       <input type="text" step="any" class="form-control" id="TENSION_P_INI_4" name="TENSION_P_INI_4" autocomplete="off" required>
+                       <input type="text" step="any" class="form-control" id="TENSION_P_INI_4" name="TENSION_P_INI_4" autofocus="on" autocomplete="off" required>
                       </div>
                     </div>
                     <div class= "col-lg-3 col-md-3 col-sm-3">

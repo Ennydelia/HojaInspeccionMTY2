@@ -35,7 +35,7 @@
 						<div class= "col-lg-5 col-md-5 col-sm-5">
 							<div class="form-group">
 								<label for="OPERADOR">Operador</label>
-								<input type="text" step="any" class="form-control" id="OPERADOR" name="OPERADOR" autocomplete="off" required>
+								<input type="text" step="any" class="form-control" id="OPERADOR" name="OPERADOR" autocomplete="off" autofocus="on" required>
 							</div>
 						</div>
 					</div>			
