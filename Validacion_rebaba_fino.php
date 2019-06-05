@@ -184,7 +184,7 @@
 		function PagRec() {
 		$.confirm({
 			title: 'Mandar a Rechazo Interno',
-    	content: 'Para mandar a Rechazo es necesario proporcional la clave de acceso:' +
+    	content: 'Para mandar a Rechazo es necesaria la clave de acceso:' +
     	'<form action="" class="formName">' +
     	'<div class="form-group">' +
     	'<label>Porfavor escriba la clave:</label>' +

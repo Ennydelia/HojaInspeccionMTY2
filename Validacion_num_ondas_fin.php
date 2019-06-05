@@ -40,6 +40,8 @@
 																			$resultado = odbc_do($conn, $consulta);
 																			echo "<center><h4>VALIDACION FINAL ONDAS</h4></center>";	
 																			echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
+																			echo "<input type='hidden' name='wo_no' id='wo_no' value='". strtoupper($_GET["wo"])."'>";
+																			echo "<input type='hidden' name='bom' id='bom' value='". strtoupper($_GET["bom"])."'>";
 																			echo "<input name='liberar' id='liberar' type='submit' class='btn btn-warning' style='float:right; display:none;' value='Liberar' onclick='Liberar()'>";
 																			echo '</br>';
 																			echo '</br>';
@@ -178,15 +180,14 @@
 									});
 
 								});
-						//-----------------------------SECCION DE RECHAZOS INTERNOS--------------------------------------
-						function PagRec() {
+//------------------FUNCION QUE REDIRIGE A LA PAGINA DE RECHAOS INTERNOS-------------------------------------
+function PagRec() {
 		$.confirm({
 			title: 'Mandar a Rechazo Interno',
-    	content: 'Para mandar a Rechazo es necesario proporcional la clave de acceso:' +
+    	content: 'Para mandar a Rechazo es necesaria la clave de acceso:' +
     	'<form action="" class="formName">' +
-    	'<div class="form-group">' +
-    	'<label>Porfavor escriba la clave:</label>' +
-    	'<input type="password" placeholder="clave" class="name form-control" required />' +
+    	'<div class="form-group">' +		
+    	'<input type="password" placeholder="clave" class="password form-control" required />' +
     	'</div>' +
    		'</form>',
     	buttons: {
@@ -194,110 +195,160 @@
       	  text: 'Aceptar',
           btnClass: 'btn-red',
           action: function () {
-          var name = this.$content.find('.name').val();
-					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-          if(name == 'Inspectores2019' || name == 'Calidad2019') {
-            $.alert('Orden Madada a Rechazo');
-						$(function() {
-				console.log($("#campovalidar").serialize());
-				$.ajax({
-					url: "insert_rechazo2.php",
-					type: 'post',
-					data: $("#campovalidar").serialize(),
-					success: function(data) {
-						var str = data;
-						var res = str.split(",");							
-						if(res[0]=="Error"){
-							toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
-							$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
-						}
-						else if(res[0]=="Warning"){
-							toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
-						}
-						else if(res[0]=="Ok"){
-							toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
-							window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
-							window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-						}
+      	    var name = this.$content.find('.password').val();
+						//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
+						if(name == 'jj6515' || name == 'fp6544' || name == "sp9641"||name == 'as6234' || name == 'io7343'||name == 'io7316' || name == 'io7565'||name == 'sp9887' || name == 'sp9888'||name == 'sp9916' ) 
+			  		{
+							if(name=="jj6515"){$user="Jessica Jimenez"}
+							if(name=="fp6544"){$user="Fernanda Perales"}
+        			if(name=="as6234"){$user="Alfredo Silva"}
+        			if(name=="io7343"){$user="Roberto Guerrero"}
+        			if(name=="io7316"){$user="Rene Nolasco"}
+        			if(name=="io7565"){$user="Inspector3"}
+							if(name=="sp9887"){$user="Mauricio Lumbreras"}
+        			if(name=="sp9888"){$user="Luciano Platas"}
+							if(name=="sp9641"){$user="Adrián Saucedo"}
+							$tipo = "Rechazo";
+							$wo_no = document.getElementById("wo_no").value; 
+							$mother_bom = document.getElementById("bom").value; 
+							$lugar = "Validacion Numero de Ondas fin";
+							$.alert('Mandado a rechazo por: ' + $user);
+							$(function() {
+								$.ajax({
+	                type: "POST",
+                	url: "insertpersonal.php",
+                	data:{
+                 		'Tipo_Liberacion' : $tipo,
+                 		'Libero' :$user,
+                  	'wo_no' : $wo_no,
+              	  	'mother_bom': $mother_bom,
+										'lugar': $lugar
+									},
+								});
+							});
+							$(function() {
+								console.log($("#campovalidar").serialize());
+								$.ajax({
+									url: "insert_valores.php",
+									type: 'post',
+									data: $("#campovalidar").serialize(),
+									success: function(data) {
+										var str = data;
+										var res = str.split(",");							
+										if(res[0]=="Error"){
+											toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
+											$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
+										}
+										else if(res[0]=="Warning"){
+											toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
+										}
+										else if(res[0]=="Ok"){
+											toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
+											window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
+											window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+										}
+										else{
+											toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
+										}
+									}
+								});			
+							});		
+          	}
 						else{
-							toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
-						}
+							$.alert('Clave incorrecta');
+  	          return false;
+    	      }
 					}
-				});			
-			});		
-          }
-					else{
-						$.alert('Clave incorrecta');
-            return false;
-          }
-				}
-      },
-      cancel: function () {
-      //close
-      },
-    },
-    onContentReady: function () {
-    // bind to events
-    	var jc = this;
-      this.$content.find('form').on('submit', function (e) {
-      	 // if the user submits the form by pressing enter in the field.
-        e.preventDefault();
-        jc.$$formSubmit.trigger('click'); // reference the button and click it
-      });
-    }
-	});
-	
+      	},
+      	cancel: function () {
+      		//close
+      	},
+    	},
+    	onContentReady: function () {
+    		// bind to events
+    		var jc = this;
+    		this.$content.find('form').on('submit', function (e) {
+     			// if the user submits the form by pressing enter in the field.
+      		e.preventDefault();
+      		jc.$$formSubmit.trigger('click'); // reference the button and click it
+    		});
+  		}
+		});	
 	}
-function Liberar() {
+//------------------------------------------FUNCION PARA LIBERAR INFORMACION------------------------
+	function Liberar() {
 		$.confirm({
-			title: 'Desbloquear informacion',
+    	title: 'Liberar informacion',
     	content: '' +
     	'<form action="" class="formName">' +
     	'<div class="form-group">' +
-    	'<label>Porfavor escriba la clave:</label>' +
     	'<input type="password" placeholder="clave" class="name form-control" required />' +
     	'</div>' +
    		'</form>',
-			 buttons: {
-      	formSubmit: {
-      	  text: 'Aceptar',
-          btnClass: 'btn-red',
-          action: function () {
-          var name = this.$content.find('.name').val();
-					//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-          if(name == 'Inspectores2019' || name == 'Calidad2019') {
-            $.alert('Datos desbloqueados');
-					var validator = $( "#campovalidar" ).validate();
-					validator.resetForm();
-					$("#continuar").hide();
-					$("#siguiente").show();
-					$("#liberar").hide();
-					// $("#campovalidar").removeAttr("readonly");
-					// $("#campovalidar")[0].reset();	
-          }
-					else{
-						$.alert('Clave incorrecta');
-            return false;
-          }
-				}
-      },
-      cancel: function () {
-      //close
-      },
-    },
-    onContentReady: function () {
-    // bind to events
-    	var jc = this;
-      this.$content.find('form').on('submit', function (e) {
-      	 // if the user submits the form by pressing enter in the field.
-        e.preventDefault();
-        jc.$$formSubmit.trigger('click'); // reference the button and click it
-      });
-    }
-	});
-}
-	
-					
+	  	buttons: {
+    		formSubmit: {
+        	text: 'Aceptar',
+	        btnClass: 'btn-red',
+  	      action: function () {
+    	    	var name = this.$content.find('.name').val();
+				  	//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
+        		if(name == 'jj6515' || name == 'fp6544' || name == "sp9641"||name == 'as6234' || name == 'io7343'||name == 'io7316' || name == 'io7565'||name == 'sp9887' || name == 'sp9888'||name == 'sp9916' ) 
+			  		{
+							if(name=="jj6515"){$user="Jessica Jimenez"}
+							if(name=="fp6544"){$user="Fernanda Perales"}
+    	    		if(name=="as6234"){$user="Alfredo Silva"}
+      	  		if(name=="io7343"){$user="Roberto Guerrero"}
+							if(name=="io7316"){$user="Rene Nolasco"}
+							if(name=="io7565"){$user="Inspector3"}
+							if(name=="sp9887"){$user="Mauricio Lumbreras"}
+							if(name=="sp9888"){$user="Luciano Platas"}
+							if(name=="sp9641"){$user="Adrián Saucedo"}
+							$tipo = "Liberacion";
+							$wo_no = document.getElementById("wo_no").value; 
+							$mother_bom = document.getElementById("bom").value; 
+							$lugar = "Validacion Numero de Ondas fin";
+							$.alert('Datos desbloqueados por: ' + $user);
+							$(function() {
+								$.ajax({
+  	              type: "POST",
+    	            url: "insertpersonal.php",
+      	          data:{
+        	         'Tipo_Liberacion' : $tipo,
+          	       'Libero' :$user,
+            	      'wo_no' : $wo_no,
+              		  'mother_bom': $mother_bom,
+										'lugar': $lugar
+									},
+								});
+							});
+							var validator = $( "#campovalidar" ).validate();
+							validator.resetForm();
+							$("#continuar").hide();
+							$("#siguiente").show();
+							$("#liberar").hide();	
+						}
+						else{
+							$.alert('Clave incorrecta');
+  	        	return false;
+    	    	}
+					}
+    		},	
+    		cancel: function () {
+    			//close
+    		},
+  		},
+  		onContentReady: function () {
+  			// bind to events
+  			var jc = this;
+    		this.$content.find('form').on('submit', function (e) {
+    			// if the user submits the form by pressing enter in the field.
+    			e.preventDefault();
+    			jc.$$formSubmit.trigger('click'); // reference the button and click it
+  			});
+			}
+		});
+	}
+//------------------------------------------------------------------------------------------------------//
 					 $( function()
 						{
 								var targets = $( '[rel~=tooltip]' ),
