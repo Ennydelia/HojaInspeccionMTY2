@@ -19,7 +19,7 @@ $BOM = $_POST["bomm"];
 									if (!$conn)
 										die ("conexionerror");
 
-			$consulta = "update [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] set ".$campo." = '".$val."',  USER_INSERT = '".strtoupper($_SESSION['USSERNAME'])."', UPDATE_DATE = getdate() where BOM_NO = '".$name."'";
+			$consulta = "update [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] set ".$campo." = '".$val."',  SUP_RECHAZO = '".strtoupper($_SESSION['USSERNAME'])."', RECHAZO_DATE = getdate() where BOM_NO = '".$name."'";
 			$resultado = odbc_do($conn, $consulta);	
 			echo "Ok,";
 	   }
@@ -40,8 +40,8 @@ $BOM = $_POST["bomm"];
 			$conn = odbc_connect("Driver={SQL Server};Server=".$server2.";", $user2,$pass2);
 									if (!$conn)
 										die ("conexionerror");
-
-			$consulta = "update [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] set ".$campo2." = '".$val."' where PROD_LINE_NO = '".$name."' and MOTHER_BOM = '".$BOM."'";
+                                     
+			$consulta = "update [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] set ".$campo2." = '".$val."' where PROD_LINE_NO = '".$name."' and MOTHER_BOM = '".$BOM."'";
 			$resultado = odbc_do($conn, $consulta);	
 			echo "Ok,";
 	   }

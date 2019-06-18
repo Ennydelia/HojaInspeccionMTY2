@@ -35,8 +35,8 @@
 										$FORMER_BOM = odbc_result($resultado, 1);
 										$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' and  VAL_FIN_ANCHO is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
 										$resultado = odbc_do($conn, $consulta);	
-										while (odbc_fetch_row($resultado)) {
-											if(odbc_result($resultado, 1) <> "0"){//SI HAY NULOS MUESTRA LOS CAMPOS PARA LLENAR VALORES
+										
+											if(odbc_result($resultado, 1) > "0"){//SI HAY NULOS MUESTRA LOS CAMPOS PARA LLENAR VALORES
 												$consulta = "SELECT BOM_NO,  convert(varchar(20),MIN_ANCHO) MIN_ANCHO,  convert(varchar(20),MAX_ANCHO) MAX_ANCHO,  VAL_FIN_ANCHO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
 													$resultado = odbc_do($conn, $consulta);	
 													echo "<center><h4>VALIDACION ANCHOS FINALES (RECHAZO)</h4></center>";
@@ -45,7 +45,7 @@
 													echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>FIN ANCHO</th></tr>';
 													$count = 1;
 														while (odbc_fetch_row($resultado)) {
-															echo '<tr><td><abbr title="'.odbc_result($resultado, 2).' - '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
+															echo '<tr><td><abbr title="'.odbc_result($resultado, 2).' - '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" autofocus="on" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
 															$count++;
 														}
 														//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
@@ -56,7 +56,7 @@
 															header("Location: Rechazo_espesor_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
 															die();
 														}
-													}
+													
 												}
 											}
 										}

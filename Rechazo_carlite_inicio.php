@@ -48,7 +48,7 @@
 												echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>CARLITE</th></tr>';
 												$count = 1;
 												while (odbc_fetch_row($resultado)) {
-													echo '<tr><td><abbr title="'.odbc_result($resultado, 2).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" lang="es" type="text" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 3).'"></td><td><input style="display:none;"  id="Validacion" name="Validacion" value="'.odbc_result($resultado, 2).'"></td></tr>';
+													echo '<tr><td><abbr title="'.odbc_result($resultado, 2).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" autofocus="on" lang="es" type="text" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 3).'"></td><td><input style="display:none;"  id="Validacion" name="Validacion" value="'.odbc_result($resultado, 2).'"></td></tr>';
 													$count++;
 												}
 												//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------

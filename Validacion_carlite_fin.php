@@ -147,7 +147,7 @@
 											
 											else{
 												//REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
-												header("Location: Validacion_Comentarios.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);                
+												header("Location: Validacion3.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);                
 												die();
 											}
 										} 

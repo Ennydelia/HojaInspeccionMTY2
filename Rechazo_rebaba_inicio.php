@@ -42,23 +42,24 @@
 								$resultado = odbc_do($conn, $consulta); 
 								while (odbc_fetch_row($resultado)) {
 									if(odbc_result($resultado, 1) <> "0"){//SI HAY NULOS MUESTRA LOS CAMPOS PARA LLENAR VALORES
-										$consulta = "SELECT BOM_NO,  convert(varchar(20),0) R1,  convert(varchar(20),REBABA) R2, VAL_INI_REBABA_MOTOR, VAL_INI_REBABA_OP FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
+										$consulta = "SELECT BOM_NO,  convert(varchar(20),0) R1,  convert(varchar(20),REBABA) R2, VAL_INI_REBABA_MOTOR, VAL_INI_REBABA_OP, PROD_LINE_NO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
 										$resultado = odbc_do($conn, $consulta);	
                       echo "<center><h4>VALIDACION INICIO REBABA (RECHAZO)</h4></center>";
                       echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
                       //aqui cambiar los IDs
-                      echo '<form id="campovalidar" action="insert_rechazo3.php" method="post">';
-                      echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>MOTOR </th></tr>';
+                      echo '<form id="campovalidar" action="insert_rechazo4.php" method="post">';
+                      echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="3">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>MOTOR </th><th>OPERADOR</th></tr>';
                       $count = 1;
                       while (odbc_fetch_row($resultado)) {
                         echo '<tr><td><abbr title="< '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td>';
-                        echo '<td><input style="width:100px;" autocomplete="off" lang="es" type="number"  id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td>';
+												echo '<td><input style="width:100px;" autocomplete="off" autofocus="on" lang="es" type="number"  id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td>';
+												echo '<td><input style="width:100px;" autocomplete="off" lang="es" type="number"  id="'.odbc_result($resultado, 6).'" name="'.odbc_result($resultado, 6).'" value="'.odbc_result($resultado, 5).'"></td>';
 
                         echo '</tr>';
                         $count++;
 										} 
 																			
-									 echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_INI_REBABA_MOTOR"><input id="Siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
+									 echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_INI_REBABA_MOTOR"><input type="hidden" name="bomm" id="bomm" value= '. strtoupper($_GET["bom"]).'><input type="hidden" name="valor" value="VAL_INI_REBABA_OP"><input id="Siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td><td></td></tr></table></form>';
 
 								
 									}

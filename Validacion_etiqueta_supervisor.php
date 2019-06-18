@@ -27,7 +27,7 @@
 
 
                         	
-							$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and FINAL_CHECK is NULL or FINAL_CHECK = 0  AND MOTHER_BOM = '". strtoupper($_GET["bom"]) ."'order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
+							$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and VAL_ETI_SUPERVISOR is NULL AND MOTHER_BOM = '". strtoupper($_GET["bom"]) ."'order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
 							  $resultado = odbc_do($conn, $consulta);  
 							  $yavalidado = 1;
 							  while (odbc_fetch_row($resultado)) {

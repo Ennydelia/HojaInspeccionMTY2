@@ -29,7 +29,7 @@
               }
               if($count > 0){
                 //header("Location: tolerancias_ancho_inicio.php?wo=".$_GET["wo"]."&FBOM=".$FORMER_BOM);
-                echo '<meta http-equiv="refresh" content="0;url=tolerancias_ancho_inicio.php?wo='.$_GET["wo"].'">';
+                echo '<meta http-equiv="refresh" content="0;url=validacion_ancho_rollo.php?wo='.$_GET["wo"].'&bom='.$_GET["bom"].'">';
                 die();
 
               }else{
