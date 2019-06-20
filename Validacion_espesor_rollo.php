@@ -39,8 +39,7 @@
      				  while (odbc_fetch_row($resultado)) {
 								if(odbc_result($resultado, 1) <> "0"){
 									$consulta = "SELECT TOP 1 MOTHER_BOM, convert(varchar(20),PESO_INI) PESO_INI,  convert(varchar(20), MIN_PESO_INI) MIN_PESO_INI, convert(varchar(20), MAX_PESO_INI) MAX_PESO_INI,convert(varchar(20),ANCHO_INI) ANCHO_INI, convert(varchar(20), MIN_ANCHO_INI) MIN_ANCHO_INI, convert(varchar(20), MAX_ANCHO_INI) MAX_ANCHO_INI, convert(varchar(20),ESPESOR_INI) ESPESOR_INI, convert(varchar(20), MIN_ESPESOR_INI) MIN_ESPESOR_INI, convert(varchar(20), MAX_ESPESOR_INI) MAX_ESPESOR_INI, VAL_PESO_INI, VAL_ANCHO_INI, VAL_ESPESOR_INI, CUSTOMER_NAME FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RM] WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."'";
-									$resultado = odbc_do($conn, $consulta); 
-									//echo "<center>WO: ". strtoupper($_GET["wo"])."</center>";
+									$resultado = odbc_do($conn, $consulta);
 									//--- CREAMOS LA TABLA PARA PODER ACOMODAR LOS DATOS
 									echo '<center><h4>DATOS DEL ROLLO RECIBIDO</h4></center>';
 									echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";

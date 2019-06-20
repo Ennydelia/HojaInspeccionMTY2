@@ -163,13 +163,8 @@
 								}
 								else if(res[0]=="Ok"){
 								toastr.success(res[1], 'Datos correctos', {timeOut: 2500, positionClass: "toast-top-center"});
-								//var mensaje = confirm("¿Continuar con las tensiones?");
-             				//if (mensaje) {
-                  	 		//window.location.replace("val_tensiones.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-            				//}
-              				//else {
+						
                				window.location.replace("Validacion_ondulacion_inicio.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-               				//}
              				}
 								else{
 								toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})

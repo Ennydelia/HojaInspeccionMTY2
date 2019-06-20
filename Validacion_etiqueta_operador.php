@@ -103,20 +103,8 @@
 												}
 
 											});
-
-										   
-
-										  });
-
-										  
-
-										  </script>";
-
-  
-
-
-
-
+										  });										  
+										  </script>"; 
 								  }
 								  else{
 									  //REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
