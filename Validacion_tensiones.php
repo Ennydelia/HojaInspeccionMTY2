@@ -511,7 +511,7 @@ $(function() {
 			var actionurl = e.currentTarget.action;
 			var mensaje = confirm("¿Cancelar datos?");				
 			if (mensaje) {
-						window.location.replace("Validacion_ancho_fin.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+						window.location.replace("Validacion_etiqueta_operador.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
 						}
 						else{
 						

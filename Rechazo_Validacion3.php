@@ -43,11 +43,29 @@
 										}										
 									 }
 									ELSE{
-									header("Location: Rechazado.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
-									die();
-								}	
-								
-								
+										$consulta3 ="SELECT  COUNT(BOM_NO) AS BOM_NO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM ='" .strtoupper(($_GET["bom"])). "' AND VAL_ETI_OPERADOR IS NULL";
+										$resultado3 = odbc_do($conn, $consulta3); 			
+										$yavalidado2 = 1;
+										$Contador2 = odbc_result($resultado3, 1);
+										//echo $Contador;
+									   if(odbc_result($resultado3, 1) > "0"){
+											$yavalidado2 = 0;
+											if($yavalidado2 ==0){							
+											//MUESTRA INSPECCION_ONDULAION
+											header("Location: Rechazo_etiqueta_operador.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+											die;
+											}										
+										 }
+										 ELSE{
+										header("Location: Rechazado.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+										die();
+										 }
+									}	
+								}
 							}
-						}
-					?>
+							
+									
+									
+							
+						?>
+	

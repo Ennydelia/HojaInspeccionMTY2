@@ -39,7 +39,8 @@
      				  while (odbc_fetch_row($resultado)) {
 								if(odbc_result($resultado, 1) <> "0"){
 									$consulta = "SELECT TOP 1 MOTHER_BOM, convert(varchar(20),PESO_INI) PESO_INI,  convert(varchar(20), MIN_PESO_INI) MIN_PESO_INI, convert(varchar(20), MAX_PESO_INI) MAX_PESO_INI,convert(varchar(20),ANCHO_INI) ANCHO_INI, convert(varchar(20), MIN_ANCHO_INI) MIN_ANCHO_INI, convert(varchar(20), MAX_ANCHO_INI) MAX_ANCHO_INI, convert(varchar(20),ESPESOR_INI) ESPESOR_INI, convert(varchar(20), MIN_ESPESOR_INI) MIN_ESPESOR_INI, convert(varchar(20), MAX_ESPESOR_INI) MAX_ESPESOR_INI, VAL_PESO_INI, VAL_ANCHO_INI, VAL_ESPESOR_INI, CUSTOMER_NAME FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RM] WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."'";
-									$resultado = odbc_do($conn, $consulta);
+									$resultado = odbc_do($conn, $consulta); 
+									//echo "<center>WO: ". strtoupper($_GET["wo"])."</center>";
 									//--- CREAMOS LA TABLA PARA PODER ACOMODAR LOS DATOS
 									echo '<center><h4>DATOS DEL ROLLO RECIBIDO</h4></center>';
 									echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
@@ -105,7 +106,7 @@
 						}
 					}
 					if($yavalidado == 1){
-						header("Location: datos_validados.php?wo=".$_GET["wo"]."bom=".$_GET["bom"]);
+						header("Location: Validacion_ancho_inicio.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
 						die();
 					}
 				}					
@@ -179,7 +180,7 @@ function PagRec() {
           action: function () {
       	    var name = this.$content.find('.password').val();
 						//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-						if(name == 'jj6515' || name == 'fp6544' || name == "sp9641"||name == 'as6234' || name == 'io7343'||name == 'io7316' || name == 'io7565'||name == 'sp9887' || name == 'sp9888'||name == 'sp9916' ) 
+						if(name == 'jj6515' || name == 'fp6544' ||name == 'sp9916' || name == "sp9641"||name == 'as6234' || name == 'io7343'||name == 'io7316' || name == 'io7565'||name == 'sp9887' || name == 'sp9888'||name == 'sp9916' ) 
 			  		{
 							if(name=="jj6515"){$user="Jessica Jimenez"}
 							if(name=="fp6544"){$user="Fernanda Perales"}
@@ -190,6 +191,7 @@ function PagRec() {
 							if(name=="sp9887"){$user="Mauricio Lumbreras"}
         			if(name=="sp9888"){$user="Luciano Platas"}
 							if(name=="sp9641"){$user="Adrián Saucedo"}
+							if(name=="sp9916"){$user="Roberto Cerda"}
 							$tipo = "Rechazo";
 							$wo_no = document.getElementById("wo_no").value; 
 							$mother_bom = document.getElementById("bom").value; 
@@ -274,17 +276,18 @@ function PagRec() {
   	      action: function () {
     	    	var name = this.$content.find('.name').val();
 				  	//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-        		if(name == 'jj6515' || name == 'fp6544' || name == "sp9641"||name == 'as6234' || name == 'io7343'||name == 'io7316' || name == 'io7565'||name == 'sp9887' || name == 'sp9888'||name == 'sp9916' ) 
+					  if(name == 'jj6515' || name == 'fp6544' ||name == 'sp9916' || name == "sp9641"||name == 'as6234' || name == 'io7343'||name == 'io7316' || name == 'io7565'||name == 'sp9887' || name == 'sp9888'||name == 'sp9916' ) 
 			  		{
 							if(name=="jj6515"){$user="Jessica Jimenez"}
 							if(name=="fp6544"){$user="Fernanda Perales"}
-    	    		if(name=="as6234"){$user="Alfredo Silva"}
-      	  		if(name=="io7343"){$user="Roberto Guerrero"}
-							if(name=="io7316"){$user="Rene Nolasco"}
-							if(name=="io7565"){$user="Inspector3"}
+        			if(name=="as6234"){$user="Alfredo Silva"}
+        			if(name=="io7343"){$user="Roberto Guerrero"}
+        			if(name=="io7316"){$user="Rene Nolasco"}
+        			if(name=="io7565"){$user="Inspector3"}
 							if(name=="sp9887"){$user="Mauricio Lumbreras"}
-							if(name=="sp9888"){$user="Luciano Platas"}
+        			if(name=="sp9888"){$user="Luciano Platas"}
 							if(name=="sp9641"){$user="Adrián Saucedo"}
+							if(name=="sp9916"){$user="Roberto Cerda"}
 							$tipo = "Liberacion";
 							$wo_no = document.getElementById("wo_no").value; 
 							$mother_bom = document.getElementById("bom").value; 

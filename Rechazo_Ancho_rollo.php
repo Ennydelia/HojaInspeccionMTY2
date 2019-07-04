@@ -1,17 +1,17 @@
 <!DOCTYPE HTML>
 <html lang="es">
 <head>
-<title>Hoja de Inspeccion SLT2</title>
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<?php include("php/Pagina_inicio.php"); ?>
-<!-- ------------------------- -->
-<div class="container-fluid">
-	<div class="row">
-		<div class= "col-lg-12 col-md-12 col-sm-12">
-			<?php
-  			include("php/variables.php");
+	<title>Hoja de Inspeccion SLT2</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<?php include("php/Pagina_inicio.php"); ?>
+	<!-- ------------------------- -->
+	<div class="container-fluid">
+		<div class="row">
+			<div class= "col-lg-12 col-md-12 col-sm-12">
+				<?php
+				include("php/variables.php");
 				$_GET["wo"] = str_replace(" ","",$_GET["wo"]);
 				$_GET["bom"] = str_replace(" ","",$_GET["bom"]);
 				$conn = odbc_connect("Driver={SQL Server};Server=".$server2.";", $user2,$pass2);
@@ -19,7 +19,7 @@
 					die ("conexionerror");
 				//------ INICIAMOS CON LA BUSQUEDA DE DATOS DEPENDIENDO DEL ROLLO MADRE (BOM_NO) ---------
 				$consulta = "select count(WO_NO) existe_wo from openquery(hgdb,'select WO_NO from WK07_WO_RM where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]). "'' and BOM_NO = ''". strtoupper($_GET["bom"]) ."'' ')";
-				$resultado = odbc_do($conn, $consulta);	
+						$resultado = odbc_do($conn, $consulta);	
 				while (odbc_fetch_row($resultado)) {
 					if (odbc_result($resultado, 1) == "0"){
 						echo "<script>$('#bodymain').loading('stop');</script>";
@@ -33,8 +33,10 @@
 							$maquina = odbc_result($resultado, 1);//RECTIFICA QUE SEA LLA MAQUINA A CORTAR INICIO-FINAL
 							//------ INICIAN LOS SP PARA AGREGAR LOS DATOS (ROLLO MADRE, NOTAS, ORDEN INSPECCION) ------ 
 							$consulta3 = "EXEC[MTY_PROD_SSM].[dbo].[SP_TOL_INSPECCION_MTY] @WO_NO = '". strtoupper($_GET["wo"]) ."'";
-							$resultado3 = odbc_do($conn, $consulta3);						
+							$resultado3 = odbc_do($conn, $consulta3);
+							
 							//--- SE BUSCA QUE EL ROLLO MADRE SOLICITADO NO HALLA SIDO VALIDADO YA ---
+
 							$resultado = odbc_do($conn, $consulta); 
 							$yavalidado = 1;
 							while (odbc_fetch_row($resultado)) {
@@ -61,7 +63,7 @@
 										//--- SE CREA EL BOTON DE CONTINUAR ---
 										echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ANCHO_INI"><input id="Siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
 										//--- INICIAMOS VALIDACION DE LOS 3 CAMPOS ---
-									}
+										}
 									else{
 										//MOSTRAR LA SIGUIENTE EVALUACION (ESPESOR ROLLO MADRE)
 										header("Location: Rechazo_Espesor_rollo.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
@@ -69,63 +71,90 @@
 									}
 								}
 							}
+					
+							}
 						}
 					}
-				}
-			?>
+				?>
+			</div>
 		</div>
 	</div>
-</div>
-<br/>
-<div><?php include("php/NotasInspeccion.php"); ?></div>
-<!-- ------------------------------------------------------------------------------------------------------------------------------------ -->
-<script src="js/pikaday.js"></script>
-<link href="css/speech-input.css" rel="stylesheet">
-<script src="js/speech-input.js"></script>
-<script>
-	$(document).ready(function(){
-		$('#bodymain').loading('stop');
-	});
-	$("input[type='number']").on("click", function () {
-		$(this).select();
-	});
-	$(function() {
-		$("#campovalidar").submit(function(e) {
-			e.preventDefault();
-			var actionurl = e.currentTarget.action;
-			console.log($("#campovalidar").serialize());
+	<br/>
+	<div><?php include("php/NotasInspeccion.php"); ?></div>
+	<!-- ------------------------------------------------------------------------------------------------------------------------------------ -->
+
+		<script src="js/pikaday.js"></script>
+		<link href="css/speech-input.css" rel="stylesheet">
+		<script src="js/speech-input.js"></script>
+		<script>
+		$(document).ready(function(){
+			$('#bodymain').loading('stop');
+		});
+		$("input[type='number']").on("click", function () {
+			$(this).select();
+		});
+		$(function() {
+			$("#campovalidar").submit(function(e) {
+				e.preventDefault();
+				var actionurl = e.currentTarget.action;
+				console.log($("#campovalidar").serialize());
+				var isvalid = $("#campovalidar").valid();
+				if (isvalid) {
+					$.ajax({
+						url: actionurl,
+						type: 'post',
+						data: $("#campovalidar").serialize(),
+						success: function(data) {
+							var str = data;
+							var res = str.split(",");
+							if(res[0]=="Error"){
+								toastr.error(res[1], 'Error', {timeOut: 5000, positionClass: "toast-top-center"})
+								$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
+							}
+							else if(res[0]=="Warning"){
+								toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
+							}
+							else if(res[0]=="Ok"){
+								toastr.success(res[1], 'Datos correctos', {timeOut: 2500, positionClass: "toast-top-center"});
+								window.location.replace("Rechazo_Espesor_rollo.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+							}
+							else{
+								toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
+							}
+						}
+					});
+				}
+			});
+		});
+
+//--------------VISUALIZACION DE BOTONES-------------------
+		$("#campovalidar").on('change', function() {
 			var isvalid = $("#campovalidar").valid();
 			if (isvalid) {
-				$.ajax({
-					url: actionurl,
-					type: 'post',
-					data: $("#campovalidar").serialize(),
-					success: function(data) {
-						var str = data;
-						var res = str.split(",");
-						if(res[0]=="Error"){
-							toastr.error(res[1], 'Error', {timeOut: 5000, positionClass: "toast-top-center"})
-							$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
-						}
-						else if(res[0]=="Warning"){
-							toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
-						}
-						else if(res[0]=="Ok"){
-							toastr.success(res[1], 'Datos correctos', {timeOut: 2500, positionClass: "toast-top-center"});
-							window.location.replace("Rechazo_Espesor_rollo.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-						}
-						else{
-							toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
-						}
-					}
-				});
+				$("#continuar").hide();
+				$("#Siguiente").show();
+			} 
+			else {
+				$('#Siguiente').hide();
+				$('#continuar').show();
 			}
 		});
-	});
 
-//------------------------------------------------------------------------------------------------//
-  $( function(){
-	  var targets = $( '[rel~=tooltip]' ),
+//FUNCION QUE REDIRIGE A LA PAGINA DE RECHAOS INTERNOS
+		function PagRec() {
+			//Manda alerta para confirmar si desea mandar a rechazo interno 
+			var mensaje = confirm("¿Desea mandar a Rechazo Interno?");
+			if (mensaje) {
+				window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
+				window.location.replace("rechazo.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+			}
+			else {
+				//alert("¡Haz denegado el mensaje!");
+				}
+		}
+					
+	$( function(){
+		var targets = $( '[rel~=tooltip]' ),
 		target  = false,
 		tooltip = false,
 		title   = false;

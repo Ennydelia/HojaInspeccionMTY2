@@ -104,7 +104,7 @@
 							}
 						}
 						if($yavalidado == 1){
-							header("Location: datos_validados.php?wo=".$_GET["wo"]);
+							header("Location: Validacion_espesor_inicio.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
 							die();
 						}
 					} 
@@ -178,7 +178,7 @@ function PagRec() {
           action: function () {
       	    var name = this.$content.find('.password').val();
 						//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-						if(name == 'jj6515' || name == 'fp6544' || name == "sp9641"||name == 'as6234' || name == 'io7343'||name == 'io7316' || name == 'io7565'||name == 'sp9887' || name == 'sp9888'||name == 'sp9916' ) 
+						if(name == 'jj6515' || name == 'fp6544' ||name == 'sp9916' || name == "sp9641"||name == 'as6234' || name == 'io7343'||name == 'io7316' || name == 'io7565'||name == 'sp9887' || name == 'sp9888'||name == 'sp9916' ) 
 			  		{
 							if(name=="jj6515"){$user="Jessica Jimenez"}
 							if(name=="fp6544"){$user="Fernanda Perales"}
@@ -189,6 +189,7 @@ function PagRec() {
 							if(name=="sp9887"){$user="Mauricio Lumbreras"}
         			if(name=="sp9888"){$user="Luciano Platas"}
 							if(name=="sp9641"){$user="Adrián Saucedo"}
+							if(name=="sp9916"){$user="Roberto Cerda"}
 							$tipo = "Rechazo";
 							$wo_no = document.getElementById("wo_no").value; 
 							$mother_bom = document.getElementById("bom").value; 
@@ -273,17 +274,18 @@ function PagRec() {
   	      action: function () {
     	    	var name = this.$content.find('.name').val();
 				  	//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-        		if(name == 'jj6515' || name == 'fp6544' || name == "sp9641"||name == 'as6234' || name == 'io7343'||name == 'io7316' || name == 'io7565'||name == 'sp9887' || name == 'sp9888'||name == 'sp9916' ) 
+						if(name == 'jj6515' || name == 'fp6544' ||name == 'sp9916' || name == "sp9641"||name == 'as6234' || name == 'io7343'||name == 'io7316' || name == 'io7565'||name == 'sp9887' || name == 'sp9888'||name == 'sp9916' ) 
 			  		{
 							if(name=="jj6515"){$user="Jessica Jimenez"}
 							if(name=="fp6544"){$user="Fernanda Perales"}
-    	    		if(name=="as6234"){$user="Alfredo Silva"}
-      	  		if(name=="io7343"){$user="Roberto Guerrero"}
-							if(name=="io7316"){$user="Rene Nolasco"}
-							if(name=="io7565"){$user="Inspector3"}
+        			if(name=="as6234"){$user="Alfredo Silva"}
+        			if(name=="io7343"){$user="Roberto Guerrero"}
+        			if(name=="io7316"){$user="Rene Nolasco"}
+        			if(name=="io7565"){$user="Inspector3"}
 							if(name=="sp9887"){$user="Mauricio Lumbreras"}
-							if(name=="sp9888"){$user="Luciano Platas"}
+        			if(name=="sp9888"){$user="Luciano Platas"}
 							if(name=="sp9641"){$user="Adrián Saucedo"}
+							if(name=="sp9916"){$user="Roberto Cerda"}
 							$tipo = "Liberacion";
 							$wo_no = document.getElementById("wo_no").value; 
 							$mother_bom = document.getElementById("bom").value; 

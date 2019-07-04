@@ -118,7 +118,7 @@
      	 							window.location.replace("Rechazo_Validacion2.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
   								}
   								else {
-    								window.location.replace("Rechazo_ancho_fin.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+    								window.location.replace("Rechazo_etiqueta_operador.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
     							}
     						}
 								else{

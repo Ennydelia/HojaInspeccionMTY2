@@ -1,79 +1,80 @@
 <!DOCTYPE HTML>
 <html lang="es">
-<head>
-<title>Hoja de Inspeccion SLT2</title>
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<?php include("php/Pagina_inicio.php"); ?>
-<!-- ---------------------------------------------------------- -->
-<div class="container-fluid">
-	<div class="row">
-		<div class= "col-lg-12 col-md-12 col-sm-12">
-		  <?php
-				include("php/variables.php");
-				$_GET["wo"] = str_replace(" ","",$_GET["wo"]);
-				$_GET["bom"] = str_replace(" ","",$_GET["bom"]);
-				$conn = odbc_connect("Driver={SQL Server};Server=".$server2.";", $user2,$pass2);
-				if (!$conn)
-					die ("conexionerror");
-				$consulta = "select count(WO_NO) existe_wo from openquery(hgdb,'select wo_no from WK07_WO_RM where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."''and BOM_NO = ''". strtoupper($_GET["bom"]) ."'' ')";
-				$resultado = odbc_do($conn, $consulta); 
-				while (odbc_fetch_row($resultado)) {
-					if (odbc_result($resultado, 1) == "0"){
-						echo "<script>$('#bodymain').loading('stop');</script>";
-						echo "<h3>". strtoupper($_GET["wo"]) ." o ". strtoupper($_GET["bom"]) . "no existen.</h3>";
-					}
-					else{
-						$consulta = "select top 1 MACHINE_CD existe_wo from openquery(hgdb,'select MACHINE_CD from WK04_WO_HEADER where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."'' ')";
-						$resultado = odbc_do($conn, $consulta); 
-						while (odbc_fetch_row($resultado)) {
-							$maquina = odbc_result($resultado, 1);
-							$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and VAL_FIN_REBABA_MOTOR is NULL AND VAL_FIN_REBABA_OP IS NULL order by PROD_LINE_NO";
-							$resultado = odbc_do($conn, $consulta);	
-							$yavalidado = 1;
-							while (odbc_fetch_row($resultado)) {
-								$yavalidado = 0;
-								$FORMER_BOM = odbc_result($resultado, 1);
-								$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_FIN_REBABA_MOTOR is NULL and VAL_FIN_REBABA_OP IS NULL";
-								$resultado = odbc_do($conn, $consulta);	
-								while (odbc_fetch_row($resultado)) {
-									if(odbc_result($resultado, 1) <> "0"){
-										$consulta = "SELECT BOM_NO, convert(varchar(20),0) R1,  convert(varchar(20),REBABA) R2, VAL_FIN_REBABA_MOTOR, VAL_FIN_REBABA_OP, PROD_LINE_NO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
-										$resultado = odbc_do($conn, $consulta);
-									  echo "<center><h3>VALIDACION FINAL REBABA (RECHAZO)</h3></center>";	
-										echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
-										//aqui cambiar los IDs
-										echo '<form id="campovalidar" action="insert_rechazo4.php" method="post">';
-										echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="3">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>MOTOR</th><th>OPERADOR</th></tr>';
-										$count = 1;
+	 <head>
+			<title>Hoja de Inspeccion SLT2</title>
+			<!-- Required meta tags -->
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+			<?php include("php/Pagina_inicio.php"); ?>
+			<!-- ---------------------------------------------------------- -->
+			<div class="container-fluid">
+				<div class="row">
+						<div class= "col-lg-12 col-md-12 col-sm-12">
+							 <?php
+
+									include("php/variables.php");
+									$_GET["wo"] = str_replace(" ","",$_GET["wo"]);
+									$_GET["bom"] = str_replace(" ","",$_GET["bom"]);
+									$conn = odbc_connect("Driver={SQL Server};Server=".$server2.";", $user2,$pass2);
+															if (!$conn)
+																die ("conexionerror");
+
+									$consulta = "select count(WO_NO) existe_wo from openquery(hgdb,'select wo_no from WK07_WO_RM where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."''and BOM_NO = ''". strtoupper($_GET["bom"]) ."'' ')";
+									$resultado = odbc_do($conn, $consulta); 
 										while (odbc_fetch_row($resultado)) {
-											echo '<tr><td><abbr title="< '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td>
-											<input style="width:100px;" autocomplete="off" autofocus= "on" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'">
-											</td><td><input style="width:100px;" autocomplete="off"  lang="es" type="number" id="'.odbc_result($resultado, 6).'" name="'.odbc_result($resultado, 6).'" value="'.odbc_result($resultado, 5).'"></td></tr>';
-											$count++;
+											if (odbc_result($resultado, 1) == "0"){
+												echo "<script>$('#bodymain').loading('stop');</script>";
+												echo "<h3>". strtoupper($_GET["wo"]) ." o ". strtoupper($_GET["bom"]) . "no existen.</h3>";
+											}
+											else{
+												 $consulta = "select top 1 MACHINE_CD existe_wo from openquery(hgdb,'select MACHINE_CD from WK04_WO_HEADER where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."'' ')";
+													$resultado = odbc_do($conn, $consulta); 
+													while (odbc_fetch_row($resultado)) {
+															$maquina = odbc_result($resultado, 1);
+															$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and VAL_FIN_REBABA_MOTOR is NULL order by PROD_LINE_NO";
+															$resultado = odbc_do($conn, $consulta);	
+															while (odbc_fetch_row($resultado)) {
+																$FORMER_BOM = odbc_result($resultado, 1);
+																$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_FIN_REBABA_MOTOR is NULL";
+																$resultado = odbc_do($conn, $consulta);	
+																while (odbc_fetch_row($resultado)) {
+																	if(odbc_result($resultado, 1) <> "0"){
+																			$consulta = "SELECT BOM_NO, convert(varchar(20),0) R1,  convert(varchar(20),REBABA) R2, VAL_FIN_REBABA_MOTOR FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
+																			$resultado = odbc_do($conn, $consulta);
+																			 echo "<center><h3>VALIDACION FINAL REBABA (RECHAZO)</h3></center>";	
+																			echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
+																			//aqui cambiar los IDs
+																			echo '<form id="campovalidar" action="insert_rechazo3.php" method="post">';
+																			echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>MOTOR</th></tr>';
+																			$count = 1;
+																			while (odbc_fetch_row($resultado)) {
+																					echo '<tr><td><abbr title="< '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
+																					$count++;
+																			}
+																			//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
+																			echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_FIN_REBABA_MOTOR"><input id="Siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
+																	}
+																	else{
+																			header("Location: Rechazo_rebaba_fin_operador.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+																			
+																			die();
+
+																	}
+
+																}
+															}
+													}
+											}
 										}
-										//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
-										echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_FIN_REBABA_MOTOR"><input type="hidden" name="valor" value="VAL_FIN_REBABA_OP"><input type="hidden" name="bomm" id="bomm" value= '. strtoupper($_GET["bom"]).'><input id="Siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td><td></td></tr></table></form>';
-									}
-									else{
-										header("Location: Rechazo_ondulacion_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);									
-										die();
-									}
-								}
-							}
-							if($yavalidado == 1){
-								header("Location: Rechazo_ondulacion_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);									
-								die();
-							}
-						}
-					}
-				}
-			?>
-		</div>
-	</div>
-</div>
-<br/>
+
+
+
+								?>
+
+						</div>
+				 </div>
+			</div>
+			<br/>
 			<!-- ---------------------------------------------------------- -->
 
 			<!-- Optional JavaScript -->
@@ -130,7 +131,7 @@
 																				//  echo "window.location.replace('tolerancias_telescopio.php?wo=".$_GET["wo"]."&FBOM=".$FORMER_BOM."')";
 																			//}
 																			//else{
-																					echo "window.location.replace('Rechazo_ondulacion_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]."')";
+																					echo "window.location.replace('Rechazo_rebaba_fin_operador.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]."')";
 																			//}
 
 																?>

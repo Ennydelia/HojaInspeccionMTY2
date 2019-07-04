@@ -35,7 +35,9 @@
 
 															$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and VAL_FIN_ESPESOR is NULL order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
 															$resultado = odbc_do($conn, $consulta);	
+															$yavalidado = 1;
 															while (odbc_fetch_row($resultado)) {
+																$yavalidado = 0;
 																$FORMER_BOM = odbc_result($resultado, 1);
 																$consulta = "SELECT count(*)  EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_FIN_ESPESOR is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
 																$resultado = odbc_do($conn, $consulta);	
@@ -55,20 +57,19 @@
 																			}
 																			//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
 																			echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_FIN_ESPESOR"><input id="Siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
-
-																		
-
-
 																	}
 																	else{
 																			//REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
 																			header("Location: Rechazo_rebaba_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
 																			die();
-
 																	}
-
 																}
 															}
+															if($yavalidado== 1){
+																//REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
+																header("Location: Rechazo_rebaba_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+																die();
+														}
 													}
 											}
 										}
