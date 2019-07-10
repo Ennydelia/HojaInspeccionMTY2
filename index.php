@@ -16,7 +16,7 @@
 						 <form action="Validacion.php" method="get"> 
 								<div class="form-group col-md-8">
 									<label class="col-sm-4 col-form-label">NO ORDEN:</label>
-									<input type="text" class="col-SM-2 lg-6 form-control" id="wo" name="wo" required="required" autocomplete="off" placeholder="WO NO" aria-label="WO NO" lang="es">
+									<input type="text" class="col-SM-2 lg-6 form-control" id="wo" name="wo" required="required" autocomplete="off"  autofocus="on" placeholder="WO NO" aria-label="WO NO" lang="es">
 									
 									<input id="consultar" type="button" value="Consultar" class="btn btn-primary  lg-6 col-SM-4" onclick="DSQL()"> 
 								</div>

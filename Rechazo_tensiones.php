@@ -54,7 +54,7 @@
                     <div class= "col-lg-3 col-md-3 col-sm-3">
                       <div class="form-group">
                         <label for="TENSION_P_INI_1">Inicio</label>
-                       <input type="text" step="any" class="form-control" id="TENSION_P_INI_1" name="TENSION_P_INI_1" autocomplete="off" required>
+                       <input type="text" step="any" class="form-control" id="TENSION_P_INI_1" name="TENSION_P_INI_1" autocomplete="off" autofocus="on" required>
                       </div>
                     </div>
                     <div class= "col-lg-3 col-md-3 col-sm-3">
@@ -162,6 +162,9 @@
                 echo '<form id="datosform" method="post" action="insert_rtensiones.php">
                 </div>
                   </div>
+                  <div class= "col-lg-12 col-md-12 col-sm-12">
+                  <input id="cancelar" type="submit" value="Cancelar" class="btn btn-warning" tyle="float:right;" onclick="cancelar()">
+                  </div>
                    <div class="row">
                     <div class= "col-lg-6 col-md-6 col-sm-6">
                       <div class="form-group">
@@ -249,6 +252,9 @@
                 echo '<form id="datosform" method="post" action="insert_rtensiones.php">
                 </div>
                   </div>
+                  <div class= "col-lg-12 col-md-12 col-sm-12">
+                  <input id="cancelar" type="submit" value="Cancelar" class="btn btn-warning" tyle="float:right;" onclick="cancelar()">
+                  </div>
                    <div class="row">
                     <div class= "col-lg-6 col-md-6 col-sm-6">
                       <div class="form-group">
@@ -335,6 +341,9 @@
                 <center><label><h4>Juego 4</h4></label></center>";
                 echo '<form id="datosform" method="post" action="insert_rtensiones.php">
                 </div>
+                  </div>
+                  <div class= "col-lg-12 col-md-12 col-sm-12">
+                  <input id="cancelar" type="submit" value="Cancelar" class="btn btn-warning" tyle="float:right;" onclick="cancelar()">
                   </div>
                    <div class="row">
                     <div class= "col-lg-6 col-md-6 col-sm-6">
@@ -492,6 +501,20 @@
                   });
 
                 });
+                $(function() {
+		$("#cancelar").click(function(e) {
+			e.preventDefault();
+			var actionurl = e.currentTarget.action;
+			var mensaje = confirm("¿Cancelar datos?");				
+			if (mensaje) {
+						window.location.replace("Rechazo_etiqueta_operador.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+						}
+						else{
+						
+						}
+				
+				});
+		});
 
 
 

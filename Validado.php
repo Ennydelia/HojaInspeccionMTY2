@@ -21,7 +21,7 @@
 
               
 
-              $consulta = "SELECT DISTINCT MOTHER_BOM FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE WO_NO = '". strtoupper($_GET["wo"]) ."' and MOTHER_BOM= '". strtoupper($_GET["bom"]) ."' and FINAL_CHECK is NULL order by mother_bom";
+              $consulta = "SELECT MOTHER_BOM FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE WO_NO = '". strtoupper($_GET["wo"]) ."' and MOTHER_BOM= '". strtoupper($_GET["bom"]) ."' and FINAL_CHECK is NULL order by mother_bom";
               $resultado = odbc_do($conn, $consulta); 
               $count = 0;
               while (odbc_fetch_row($resultado)) {
@@ -29,7 +29,7 @@
               }
               if($count > 0){
                 //header("Location: tolerancias_ancho_inicio.php?wo=".$_GET["wo"]."&FBOM=".$FORMER_BOM);
-                echo '<meta http-equiv="refresh" content="0;url=tolerancias_ancho_inicio.php?wo='.$_GET["wo"].'">';
+                echo '<meta http-equiv="refresh" content="0;url=validacion_ancho_inicio.php?wo='.$_GET["wo"].'&bom='.$_GET["bom"].'">';
                 die();
 
               }else{
