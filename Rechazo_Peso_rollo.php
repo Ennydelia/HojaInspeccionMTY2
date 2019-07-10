@@ -49,7 +49,7 @@
 												$count = 1;
 												while (odbc_fetch_row($resultado)) {
 													echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="1">ROLLO MADRE:</th><th><abbr title="'.odbc_result($resultado, 3).'-'.odbc_result($resultado, 4).'" rel="tooltip">PESO</abbr></th><th></th><th></th></tr>';
-													echo '<tr><td>'.odbc_result($resultado, 1).'</td><td><input style="width:100px;" autocomplete="off" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 9).'"></td><td></td><td></td></tr>';
+													echo '<tr><td>'.odbc_result($resultado, 1).'</td><td><input style="width:100px;" autocomplete="off" autofocus="on" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 9).'"></td><td></td><td></td></tr>';
 												$count++;
 												}
 											 //--- SE CREA EL BOTON DE CONTINUAR ---

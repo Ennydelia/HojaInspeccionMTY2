@@ -35,7 +35,9 @@
 
 															$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and VAL_FIN_ESPESOR is NULL order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
 															$resultado = odbc_do($conn, $consulta);	
+															$yavalidado = 1;
 															while (odbc_fetch_row($resultado)) {
+																$yavalidado = 0;
 																$FORMER_BOM = odbc_result($resultado, 1);
 																$consulta = "SELECT count(*)  EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_FIN_ESPESOR is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
 																$resultado = odbc_do($conn, $consulta);	
@@ -50,25 +52,24 @@
 																			echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>FIN ESPESOR</th></tr>';
 																			$count = 1;
 																			while (odbc_fetch_row($resultado)) {
-																					echo '<tr><td><abbr title="'.odbc_result($resultado, 2).' - '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
+																					echo '<tr><td><abbr title="'.odbc_result($resultado, 2).' - '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" autofocus="on" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
 																					$count++;
 																			}
 																			//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
 																			echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_FIN_ESPESOR"><input id="Siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
-
-																		
-
-
 																	}
 																	else{
 																			//REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
-																			header("Location: Rechazo_rebaba_fin_lmotor.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+																			header("Location: Rechazo_rebaba_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
 																			die();
-
 																	}
-
 																}
 															}
+															if($yavalidado== 1){
+																//REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
+																header("Location: Rechazo_rebaba_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+																die();
+														}
 													}
 											}
 										}
@@ -125,7 +126,7 @@
 															}
 															else if(res[0]=="Ok"){
 																toastr.success(res[1], 'Datos correctos', {timeOut: 2500, positionClass: "toast-top-center"});
-																window.location.replace("Rechazo_rebaba_fin_lmotor.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+																window.location.replace("Rechazo_rebaba_fin.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
 															}
 															else{
 																toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})

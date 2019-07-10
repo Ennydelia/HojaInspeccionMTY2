@@ -31,12 +31,15 @@
 									$maquina = odbc_result($resultado, 1);//ESTA ES LA MAQUINA DONDE SE CORTA SLITTER SE MIDE AL PRINCIPIO Y AL FINAL
 									$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and VAL_FIN_ANCHO is NULL order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
 									$resultado = odbc_do($conn, $consulta); 
+									$yavalidado = 1;
 									while (odbc_fetch_row($resultado)) {
 										$FORMER_BOM = odbc_result($resultado, 1);
 										$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' and  VAL_FIN_ANCHO is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
 										$resultado = odbc_do($conn, $consulta);	
 										while (odbc_fetch_row($resultado)) {
-											if(odbc_result($resultado, 1) <> "0"){//SI HAY NULOS MUESTRA LOS CAMPOS PARA LLENAR VALORES
+											
+											if(odbc_result($resultado, 1) > "0"){
+												$yavalidado = 0;//SI HAY NULOS MUESTRA LOS CAMPOS PARA LLENAR VALORES
 												$consulta = "SELECT BOM_NO,  convert(varchar(20),MIN_ANCHO) MIN_ANCHO,  convert(varchar(20),MAX_ANCHO) MAX_ANCHO,  VAL_FIN_ANCHO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
 													$resultado = odbc_do($conn, $consulta);	
 													echo "<center><h4>VALIDACION ANCHOS FINALES (RECHAZO)</h4></center>";
@@ -45,11 +48,11 @@
 													echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>FIN ANCHO</th></tr>';
 													$count = 1;
 														while (odbc_fetch_row($resultado)) {
-															echo '<tr><td><abbr title="'.odbc_result($resultado, 2).' - '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
+															echo '<tr><td><abbr title="'.odbc_result($resultado, 2).' - '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" autofocus="on" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
 															$count++;
 														}
 														//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
-														echo '<tr><td></td><td><input type="hidden" name="campo" value=" VAL_FIN_ANCHO"><input id="Siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
+														echo '<tr><td></td><td><input type="hidden" name="campo" value=" VAL_FIN_ANCHO"><input id="Siguiente" type="submit" class="btn btn-primary" value="Siguiente"></td></tr></table></form>';
 														}
 														else{
 															//REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
@@ -57,6 +60,11 @@
 															die();
 														}
 													}
+												}
+												if($yavalidado== 1){
+													
+													header("Location: Rechazo_espesor_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+													die();
 												}
 											}
 										}

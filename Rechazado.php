@@ -59,13 +59,13 @@
 										<label for="TURNO">Turno</label>
 										<input type="hidden" name="MOTHER_BOM" value="'.strtoupper($_GET['bom']).'">
 										<input type="hidden" name="WO_NO" value="'.strtoupper($_GET["wo"]).'">
-										<input type="number" class="form-control" id="TURNO" name="TURNO" autocomplete="off" required>
+										<input type="number" class="form-control" id="TURNO" name="TURNO" autocomplete="off" autofocus="on" required>
 									</div>
 									</div>                                 
 									<div class= "col-lg-5 col-md-5 col-sm-5">
 									<div class="form-group">
 										<label for="OPERADOR">Operador</label>
-										<input type="text" step="any" class="form-control" id="OPERADOR" name="OPERADOR" autocomplete="off" required>
+										<input type="text" step="any" class="form-control" id="OPERADOR" name="OPERADOR" autocomplete="on" required>
 									</div>
 									</div>
 									</div>

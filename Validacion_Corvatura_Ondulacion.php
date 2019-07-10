@@ -48,7 +48,7 @@
 									<div class= "col-lg-6 col-md-6 col-sm-6">
 									<div class="form-group">
 										<label for="INICIO">Inicio</label>
-										<input type="text" step="any" class="form-control" id="INICIO" name="INICIO" autocomplete="off" required>
+										<input type="text" step="any" class="form-control" id="INICIO" name="INICIO" autocomplete="off" autofocus="on" required>
 									</div>
 									</div>
 									 <div class= "col-lg-6 col-md-6 col-sm-6">

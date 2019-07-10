@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html lang="es">
 <head>
 <title>Hoja de Inspeccion SLT2</title>
@@ -8,9 +8,9 @@
 <?php include("php/Pagina_inicio.php"); ?>
 <!-- ---------------------------------------------------------- -->
 <div class="container-fluid">
-  <div class="row">
+	<div class="row">
 		<div class= "col-lg-12 col-md-12 col-sm-12">
-			<?php
+		  <?php
 				include("php/variables.php");
 				$_GET["wo"] = str_replace(" ","",$_GET["wo"]);
 				$_GET["bom"] = str_replace(" ","",$_GET["bom"]);
@@ -25,56 +25,56 @@
 						echo "<h3>". strtoupper($_GET["wo"]) ." o ". strtoupper($_GET["bom"]) . "no existen.</h3>";
 					}
 					else{
-					  $consulta = "select top 1 MACHINE_CD existe_wo from openquery(hgdb,'select MACHINE_CD from WK04_WO_HEADER where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."'' ')";
+						$consulta = "select top 1 MACHINE_CD existe_wo from openquery(hgdb,'select MACHINE_CD from WK04_WO_HEADER where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."'' ')";
 						$resultado = odbc_do($conn, $consulta); 
 						while (odbc_fetch_row($resultado)) {
-							$maquina = odbc_result($resultado, 1);//ESTA ES LA MAQUINA DONDE SE CORTA SLITTER SE MIDE AL PRINCIPIO Y AL FINAL
-							$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and VAL_NUM_ONDAS_FIN is NULL order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
+							$maquina = odbc_result($resultado, 1);
+							$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and VAL_FIN_REBABA_MOTOR is NULL AND VAL_FIN_REBABA_OP IS NULL order by PROD_LINE_NO";
 							$resultado = odbc_do($conn, $consulta);	
-							$yavalidado= 1;
+							$yavalidado = 1;
 							while (odbc_fetch_row($resultado)) {
 								$yavalidado = 0;
 								$FORMER_BOM = odbc_result($resultado, 1);
-								$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_NUM_ONDAS_FIN is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
+								$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_FIN_REBABA_MOTOR is NULL and VAL_FIN_REBABA_OP IS NULL";
 								$resultado = odbc_do($conn, $consulta);	
 								while (odbc_fetch_row($resultado)) {
-									if(odbc_result($resultado, 1) <> "0"){//SI HAY NULOS MUESTRA LOS CAMPOS PARA LLENAR VALORES
-										$consulta = "SELECT BOM_NO, convert(varchar(20), 0) C1,  convert(varchar(20), NUM_ONDAS) C2, VAL_NUM_ONDAS_FIN FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
+									if(odbc_result($resultado, 1) <> "0"){
+										$consulta = "SELECT BOM_NO, convert(varchar(20),0) R1,  convert(varchar(20),REBABA) R2, VAL_FIN_REBABA_MOTOR, VAL_FIN_REBABA_OP, PROD_LINE_NO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
 										$resultado = odbc_do($conn, $consulta);
-										echo "<center><h4>VALIDACION FINAL ONDAS (RECHAZO)</h4></center>";	
+									  echo "<center><h3>VALIDACION FINAL REBABA (RECHAZO)</h3></center>";	
 										echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
 										//aqui cambiar los IDs
-										echo '<form id="campovalidar" action="insert_rechazo3.php" method="post">';
-										echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>NUMERO ONDAS</th></tr>';
+										echo '<form id="campovalidar" action="insert_rechazo4.php" method="post">';
+										echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="3">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>MOTOR</th><th>OPERADOR</th></tr>';
 										$count = 1;
 										while (odbc_fetch_row($resultado)) {
-											echo '<tr><td><abbr title="< '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off" autofocus="on" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
+											echo '<tr><td><abbr title="< '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td>
+											<input style="width:100px;" autocomplete="off" autofocus= "on" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'">
+											</td><td><input style="width:100px;" autocomplete="off"  lang="es" type="number" id="'.odbc_result($resultado, 6).'" name="'.odbc_result($resultado, 6).'" value="'.odbc_result($resultado, 5).'"></td></tr>';
 											$count++;
 										}
 										//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
-										echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_NUM_ONDAS_FIN"><input id="Siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
+										echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_FIN_REBABA_MOTOR"><input type="hidden" name="valor" value="VAL_FIN_REBABA_OP"><input type="hidden" name="bomm" id="bomm" value= '. strtoupper($_GET["bom"]).'><input id="Siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td><td></td></tr></table></form>';
 									}
 									else{
-									//REDIRIGE A LA SIGUIENTE EVALUCION (CAMBER FIN)
-										header("Location: Rechazo_camber_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+										header("Location: Rechazo_ondulacion_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);									
 										die();
 									}
 								}
 							}
 							if($yavalidado == 1){
-								//REDIRIGE A LA SIGUIENTE EVALUCION (CAMBER FIN)
-									header("Location: Rechazo_camber_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
-									die();
-								}
+								header("Location: Rechazo_ondulacion_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);									
+								die();
+							}
 						}
 					}
 				}
 			?>
 		</div>
-  </div>
+	</div>
 </div>
 <br/>
-<!-- ---------------------------------------------------------- -->
+			<!-- ---------------------------------------------------------- -->
 
 			<!-- Optional JavaScript -->
 			<!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -117,9 +117,23 @@
 																toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
 															}
 															else if(res[0]=="Ok"){
-																toastr.success(res[1], 'OK', {timeOut: 2500, positionClass: "toast-top-center"});
-																window.location.replace("Rechazo_camber_fin.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-																
+																toastr.success(res[1], 'Ok', {timeOut: 2500, positionClass: "toast-top-center"});
+																<?PHP
+
+																//$consulta = "select COUNT(*) EDO FROM [QRO_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' AND (((MIN_ANCHO + MAX_ANCHO) / 2) <= 200 OR CLIENTE LIKE '%EUROTRANCIATURA%' OR CLIENTE LIKE '%SIEMENS%' )";
+																	//    $EDO = '0';
+																		//  $resultado = odbc_do($conn, $consulta);	
+																			//          while (odbc_fetch_row($resultado)) {
+																				//            $EDO = odbc_result($resultado, 1);
+																					//      }
+																			//if($EDO == '0'){
+																				//  echo "window.location.replace('tolerancias_telescopio.php?wo=".$_GET["wo"]."&FBOM=".$FORMER_BOM."')";
+																			//}
+																			//else{
+																					echo "window.location.replace('Rechazo_ondulacion_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]."')";
+																			//}
+
+																?>
 															}
 															else{
 																toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
@@ -132,7 +146,7 @@
 									});
 
 								});
-							 $(function(){
+						 $(function(){
 							$("#campovalidar").change(function(){
 					
 					
@@ -147,23 +161,22 @@
 							}
 							});
 						});
-							  //FUNCION QUE REDIRIGE A LA PAGINA DE RECHAOS INTERNOS
-            function PagRec() {
-            //Manda alerta para confirmar si desea mandar a rechazo interno 
-            var mensaje = confirm("¿Desea mandar a Rechazo Interno?");
-            
-            if (mensaje) {
-                
-                window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
-                window.location.replace("rechazo.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-            }
-              
-            else {
-              //alert("¡Haz denegado el mensaje!");
-              }
-            }
-          
-		
+										//FUNCION QUE REDIRIGE A LA PAGINA DE RECHAOS INTERNOS
+						function PagRec() {
+						//Manda alerta para confirmar si desea mandar a rechazo interno 
+						var mensaje = confirm("¿Desea mandar a Rechazo?");
+						
+						if (mensaje) {
+								
+								window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
+								window.location.replace("rechazo.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+						}
+							
+						else {
+							//alert("¡Haz denegado el mensaje!");
+							}
+						}
+					
 
 
 					 $( function()
