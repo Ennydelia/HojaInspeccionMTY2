@@ -19,26 +19,32 @@
 															if (!$conn)
 																die ("conexionerror");
 
+									$consulta = "select count(WO_NO) existe_wo from openquery(hgdb,'select wo_no from WK07_WO_RM where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."''and BOM_NO = ''". strtoupper($_GET["bom"]) ."'' ')";
+									$resultado = odbc_do($conn, $consulta); 
+										while (odbc_fetch_row($resultado)) {
+											if (odbc_result($resultado, 1) == "0"){
+												echo "<script>$('#bodymain').loading('stop');</script>";
+												echo "<h3>". strtoupper($_GET["wo"]) ." o ". strtoupper($_GET["bom"]) . "no existen.</h3>";
+											}
+											else{
 												 $consulta = "select top 1 MACHINE_CD existe_wo from openquery(hgdb,'select MACHINE_CD from WK04_WO_HEADER where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."'' ')";
 													$resultado = odbc_do($conn, $consulta); 
 													while (odbc_fetch_row($resultado)) {
 															$maquina = odbc_result($resultado, 1);
-
-															odbc_do($conn, $consulta);
-															$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and FINAL_CHECK is NULL or FINAL_CHECK = 0 AND MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' order by PROD_LINE_NO";
+															$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and VAL_FIN_REBABA_MOTOR is NULL order by PROD_LINE_NO";
 															$resultado = odbc_do($conn, $consulta);	
 															while (odbc_fetch_row($resultado)) {
 																$FORMER_BOM = odbc_result($resultado, 1);
-																$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_FIN_REBABA_MOTOR is NULL";
+																$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' and VAL_FIN_REBABA_MOTOR is NULL";
 																$resultado = odbc_do($conn, $consulta);	
 																while (odbc_fetch_row($resultado)) {
 																	if(odbc_result($resultado, 1) <> "0"){
-																			$consulta = "SELECT BOM_NO, convert(varchar(20),0) R1,  convert(varchar(20),REBABA) R2, VAL_FIN_REBABA_MOTOR FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
+																			$consulta = "SELECT BOM_NO, convert(varchar(20),0) R1,  convert(varchar(20),REBABA) R2, VAL_FIN_REBABA_MOTOR FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RECHAZO] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
 																			$resultado = odbc_do($conn, $consulta);
-																			 echo "<center><h4>VALIDACION FINAL REBABA (LADO MOTOR)</h4></center>";	
+																			 echo "<center><h3>VALIDACION FINAL REBABA (RECHAZO)</h3></center>";	
 																			echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
 																			//aqui cambiar los IDs
-																			echo '<form id="campovalidar" action="" method="post">';
+																			echo '<form id="campovalidar" action="insert_rechazo3.php" method="post">';
 																			echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>MOTOR</th></tr>';
 																			$count = 1;
 																			while (odbc_fetch_row($resultado)) {
@@ -46,53 +52,11 @@
 																					$count++;
 																			}
 																			//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
-																			echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_FIN_REBABA_MOTOR"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
-
-																			//AQUI VA EL SCRIPT DE VALIDACION;
-																		 echo" <script>
-																					$(document).ready(function () {
-																						$('#campovalidar').validate({ 
-																								errorClass: 'invalid',
-																								validClass: 'success',
-																								rules: {";
-
-																								$consulta = "SELECT BOM_NO, convert(varchar(20),0) R1,  convert(varchar(20),REBABA) R2, VAL_FIN_REBABA_MOTOR FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
-																								$resultado = odbc_do($conn, $consulta);	
-																								$count = 1;
-																								while (odbc_fetch_row($resultado)) {
-																										echo "".odbc_result($resultado, 1).": {
-																												required: true,
-																												min: ".odbc_result($resultado, 2).",
-																												max: ".odbc_result($resultado, 3)."
-																										},";
-																										$count++;
-																								}
-
-																								echo  "extra: {
-																												required: true
-																										}
-																								},";
-																								echo "messages: {";
-																								$consulta = "SELECT BOM_NO, convert(varchar(20),0) R1,  convert(varchar(20),REBABA) R2, VAL_FIN_REBABA_MOTOR FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
-																								$resultado = odbc_do($conn, $consulta);	
-																								while (odbc_fetch_row($resultado)) {
-																										echo "".odbc_result($resultado, 1).": '',";
-																								}
-																						echo "extra: ''
-																								}
-																						});
-
-																					});</script>";
-	
-
-
-
-
+																			echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_FIN_REBABA_MOTOR"><input id="Siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-primary"onclick="PagRec()"></td></tr></table></form>';
 																	}
 																	else{
- 
-																					header("Location: Validacion_rebaba_fino.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
-																			//}
+																			header("Location: Rechazo_rebaba_fin_operador.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+																			
 																			die();
 
 																	}
@@ -100,7 +64,9 @@
 																}
 															}
 													}
-										
+											}
+										}
+
 
 
 								?>
@@ -128,20 +94,21 @@
 							$(this).select();
 						});
 
-			$(function() {
-			$("#campovalidar").submit(function(e) {
-				e.preventDefault();
-				var actionurl = e.currentTarget.action;
-				console.log($("#campovalidar").serialize());
-				var isvalid = $("#campovalidar").valid();
-				if (isvalid) {
-					$.ajax({
-						url: "insert_valores.php",
-						type: 'post',
-						data: $("#campovalidar").serialize(),
-						success: function(data) {
-							var str = data;
-							var res = str.split(",");
+						$(function() {
+
+									$("#campovalidar").submit(function(e) {
+										e.preventDefault();
+										var actionurl = e.currentTarget.action;
+										console.log($("#campovalidar").serialize());
+										var isvalid = $("#campovalidar").valid();
+										if (isvalid) {
+										$.ajax({
+												url: actionurl,
+												type: 'post',
+												data: $("#campovalidar").serialize(),
+												success: function(data) {
+															var str = data;
+															var res = str.split(",");
 															
 															if(res[0]=="Error"){
 																toastr.error(res[1], 'Error', {timeOut: 5000, positionClass: "toast-top-center"})
@@ -151,11 +118,20 @@
 																toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
 															}
 															else if(res[0]=="Ok"){
-																toastr.success(res[1], 'Datos correctos', {timeOut: 2500, positionClass: "toast-top-center"});
+																toastr.success(res[1], 'Ok', {timeOut: 2500, positionClass: "toast-top-center"});
 																<?PHP
 
-
-																					echo "window.location.replace('Validacion_rebaba_fino.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]."')";
+																//$consulta = "select COUNT(*) EDO FROM [QRO_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' AND (((MIN_ANCHO + MAX_ANCHO) / 2) <= 200 OR CLIENTE LIKE '%EUROTRANCIATURA%' OR CLIENTE LIKE '%SIEMENS%' )";
+																	//    $EDO = '0';
+																		//  $resultado = odbc_do($conn, $consulta);	
+																			//          while (odbc_fetch_row($resultado)) {
+																				//            $EDO = odbc_result($resultado, 1);
+																					//      }
+																			//if($EDO == '0'){
+																				//  echo "window.location.replace('tolerancias_telescopio.php?wo=".$_GET["wo"]."&FBOM=".$FORMER_BOM."')";
+																			//}
+																			//else{
+																					echo "window.location.replace('Rechazo_rebaba_fin_operador.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]."')";
 																			//}
 
 																?>
@@ -171,56 +147,37 @@
 									});
 
 								});
-		//-----------------------------SECCION DE RECHAZOS INTERNOS--------------------------------------
-
-function PagRec() {
-//Manda alerta para confirmar si desea mandar a rechazo interno 
-	var mensaje = confirm("Mandar a rechazo interno: ");        
-	if (mensaje) {              
-		$(function() {
-
-				console.log($("#campovalidar").serialize());
-				$.ajax({
-					url: "insert_valores.php",
-					type: 'post',
-					data: $("#campovalidar").serialize(),
-					success: function(data) {
-						var str = data;
-						var res = str.split(",");             
-						if(res[0]=="Error"){
-							toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
-							$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
+						 $(function(){
+							$("#campovalidar").change(function(){
+					
+					
+							$(this).select();
+							var isvalid = $("#campovalidar").valid();
+							if (isvalid) {
+								$('#continuar').hide();
+								$('#Siguiente').show();
+							} else {
+								$('#Siguiente').hide();
+								$('#continuar').show();
+							}
+							});
+						});
+										//FUNCION QUE REDIRIGE A LA PAGINA DE RECHAOS INTERNOS
+						function PagRec() {
+						//Manda alerta para confirmar si desea mandar a rechazo interno 
+						var mensaje = confirm("¿Desea mandar a Rechazo?");
+						
+						if (mensaje) {
+								
+								window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
+								window.location.replace("rechazo.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
 						}
-						else if(res[0]=="Warning"){
-							toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
+							
+						else {
+							//alert("¡Haz denegado el mensaje!");
+							}
 						}
-						else if(res[0]=="Ok"){
-							toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
-							window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
-							window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-						}
-						else{
-							toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
-						}
-					}
-				});
-	
-		});   
-	}
-	else {
-	//alert("¡Haz denegado el mensaje!");
-	}
-}
-$("#campovalidar").on('change', function() {
-	var isvalid = $("#campovalidar").valid();
-	if (isvalid) {
-		$("#continuar").hide();
-		$("#siguiente").show();
-	} else {
-		$('#siguiente').hide();
-		$('#continuar').show();
- }
-});   
+					
 
 
 					 $( function()

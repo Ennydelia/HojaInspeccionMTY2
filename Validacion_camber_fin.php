@@ -63,56 +63,42 @@
 														$('#siguiente').hide();
 														
 														},
-																								rules: {";
-
-																								$consulta = "SELECT BOM_NO, convert(varchar(20), 0) C1,  convert(varchar(20), CAMBER) C2, VAL_CAMBER_FIN FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
-																								$resultado = odbc_do($conn, $consulta);	
-																								$count = 1;
-																								while (odbc_fetch_row($resultado)) {
-																										echo "".odbc_result($resultado, 1).": {
-																												required: true,
-																												min: ".odbc_result($resultado, 2).",
-																												max: ".odbc_result($resultado, 3)."
-																										},";
-																										$count++;
-																								}
-
-																								echo  "extra: {
-																												required: true
-																										}
-																								},";
-																								echo "messages: {";
-																								$consulta = "SELECT BOM_NO, convert(varchar(20), 0) C1,  convert(varchar(20), CAMBER) C2, VAL_CAMBER_FIN FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
-																								$resultado = odbc_do($conn, $consulta);	
-																								while (odbc_fetch_row($resultado)) {
-																										echo "".odbc_result($resultado, 1).": '',";
-																								}
-																						echo "extra: ''
-																								}
-																						});
-
-																					});</script>";
-	
-
-
-
-
-																	}
-																	else{
-																			//REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
-																			header("Location: Validacion_carlite_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
-																			die();
-
-																	}
-
-																}
+														rules: {";
+															$consulta = "SELECT BOM_NO, convert(varchar(20), 0) C1,  convert(varchar(20), CAMBER) C2, VAL_CAMBER_FIN FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
+															$resultado = odbc_do($conn, $consulta);	
+															$count = 1;
+															while (odbc_fetch_row($resultado)) {
+																echo "".odbc_result($resultado, 1).": {
+																	required: true,
+																	min: ".odbc_result($resultado, 2).",
+																	max: ".odbc_result($resultado, 3)."
+																},";
+																$count++;
 															}
-													}
-									
-
-
-								?>
-
+															echo  "extra: {
+																required: true
+															}
+														},";
+														echo "messages: {";
+															$consulta = "SELECT BOM_NO, convert(varchar(20), 0) C1,  convert(varchar(20), CAMBER) C2, VAL_CAMBER_FIN FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
+															$resultado = odbc_do($conn, $consulta);	
+															while (odbc_fetch_row($resultado)) {
+																echo "".odbc_result($resultado, 1).": '',";
+															}
+															echo "extra: ''
+														}
+													});
+												});</script>";
+											}
+											else{
+											//REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
+												header("Location: Validacion_carlite_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+												die();
+											}
+										}
+									}
+								}
+							?>
 						</div>
 				 </div>
 			</div>
