@@ -175,19 +175,24 @@ function PagRec() {
           action: function () {
       	    var name = this.$content.find('.password').val();
 						//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-						if(name == 'jj6515' || name == 'fp6544' ||name == 'sp9916' || name == 'sp9889' ||name == "sp9641"||name == 'as6234' || name == 'io7343'||name == 'io7316' || name == 'io7565'||name == 'sp9887' || name == 'sp9888'||name == 'sp9916' ) 
+						if(name == 'CT101010' || name == 'JJ651510' ||name == 'FP654417' || name == 'AS622461' ||name == "IO734384"||name == 'IO731603' || name == 'IO756514'||name == 'SP916101' || name == 'SP957102'||name == 'SP936703' || name == 'SP991604'||name == 'SP988605'||name == 'SP948506'||name == 'SP928607'||name == 'SP908908'||name == 'SP968009' ) 
 			  		{
-							if(name=="jj6515"){$user="Jessica Jimenez"}
-							if(name=="fp6544"){$user="Fernanda Perales"}
-        			if(name=="as6234"){$user="Alfredo Silva"}
-        			if(name=="io7343"){$user="Roberto Guerrero"}
-        			if(name=="io7316"){$user="Rene Nolasco"}
-        			if(name=="io7565"){$user="Inspector3"}
-							if(name=="sp9887"){$user="Mauricio Lumbreras"}
-        			if(name=="sp9888"){$user="Luciano Platas"}
-							if(name=="sp9641"){$user="Adrián Saucedo"}
-							if(name=="sp9916"){$user="Roberto Cerda"}
-							if(name=="sp9889"){$user="Blas Escobar"}
+							if(name=="CT101010"){$user="Carlos Tovar"}
+							if(name=="JJ651510"){$user="Jessica Jimenez"}
+        			if(name=="FP654417"){$user="Fernanda Perales"}
+        			if(name=="AS622461"){$user="Alfredo Silva"}
+        			if(name=="IO734384"){$user="Roberto Guerrero"}
+        			if(name=="IO731603"){$user="Rene Nolasco"}
+							if(name=="IO756514"){$user="Inspector 3"}
+        			if(name=="SP916101"){$user="Carlos Valdez"}
+							if(name=="SP957102"){$user="Carlos Domínguez"}
+							if(name=="SP936703"){$user="Ricardo Garcia"}
+							if(name=="SP991604"){$user="Roberto Cerda"}
+							if(name=="SP988605"){$user="Noe Mendoza"}
+							if(name=="SP948506"){$user="Adrián Saucedo"}
+							if(name=="SP928607"){$user="Mauricio Lumbreras"}
+							if(name=="SP908908"){$user="Luciano Platas"}
+							if(name=="SP968009"){$user="Blas Escobar"}
 							$tipo = "Rechazo";
 							$wo_no = document.getElementById("wo_no").value; 
 							$mother_bom = document.getElementById("bom").value; 
@@ -272,19 +277,24 @@ function PagRec() {
   	      action: function () {
     	    	var name = this.$content.find('.name').val();
 				  	//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-						if(name == 'jj6515' || name == 'fp6544' ||name == 'sp9916' || name == 'sp9889' ||name == "sp9641"||name == 'as6234' || name == 'io7343'||name == 'io7316' || name == 'io7565'||name == 'sp9887' || name == 'sp9888'||name == 'sp9916' ) 
+						if(name == 'CT101010' || name == 'JJ651510' ||name == 'FP654417' || name == 'AS622461' ||name == "IO734384"||name == 'IO731603' || name == 'IO756514'||name == 'SP916101' || name == 'SP957102'||name == 'SP936703' || name == 'SP991604'||name == 'SP988605'||name == 'SP948506'||name == 'SP928607'||name == 'SP908908'||name == 'SP968009' ) 
 			  		{
-							if(name=="jj6515"){$user="Jessica Jimenez"}
-							if(name=="fp6544"){$user="Fernanda Perales"}
-        			if(name=="as6234"){$user="Alfredo Silva"}
-        			if(name=="io7343"){$user="Roberto Guerrero"}
-        			if(name=="io7316"){$user="Rene Nolasco"}
-        			if(name=="io7565"){$user="Inspector3"}
-							if(name=="sp9887"){$user="Mauricio Lumbreras"}
-        			if(name=="sp9888"){$user="Luciano Platas"}
-							if(name=="sp9641"){$user="Adrián Saucedo"}
-							if(name=="sp9916"){$user="Roberto Cerda"}
-							if(name=="sp9889"){$user="Blas Escobar"}
+							if(name=="CT101010"){$user="Carlos Tovar"}
+							if(name=="JJ651510"){$user="Jessica Jimenez"}
+        			if(name=="FP654417"){$user="Fernanda Perales"}
+        			if(name=="AS622461"){$user="Alfredo Silva"}
+        			if(name=="IO734384"){$user="Roberto Guerrero"}
+        			if(name=="IO731603"){$user="Rene Nolasco"}
+							if(name=="IO756514"){$user="Inspector 3"}
+        			if(name=="SP916101"){$user="Carlos Valdez"}
+							if(name=="SP957102"){$user="Carlos Domínguez"}
+							if(name=="SP936703"){$user="Ricardo Garcia"}
+							if(name=="SP991604"){$user="Roberto Cerda"}
+							if(name=="SP988605"){$user="Noe Mendoza"}
+							if(name=="SP948506"){$user="Adrián Saucedo"}
+							if(name=="SP928607"){$user="Mauricio Lumbreras"}
+							if(name=="SP908908"){$user="Luciano Platas"}
+							if(name=="SP968009"){$user="Blas Escobar"}
 							$tipo = "Liberacion";
 							$wo_no = document.getElementById("wo_no").value; 
 							$mother_bom = document.getElementById("bom").value; 
