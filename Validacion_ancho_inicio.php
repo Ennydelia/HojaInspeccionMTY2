@@ -58,6 +58,7 @@
 									  //AQUI VA EL SCRIPT DE VALIDACION;
 										echo" <script>
 										$(document).ready(function () {
+							
 											$('#campovalidar').validate({ 
 												errorClass: 'invalid',
 												validClass: 'success',
@@ -122,14 +123,26 @@
 	<script>  
 		$(document).ready(function(){
 			$('#bodymain').loading('stop');
+
 	
 		}); 
 		$("input[type='number']").on("click", function () {
 			$(this).select();
 		});
-	
+	//DESABILITAR LA TECLA ENTER
+	$('#campovalidar').bind('keydown', function(e) {
+			if ( $('#continuar').is(':visible') )	{
+				//Enter key
+				if (e.which == 13) {
+				  return false;
+				}
+		}
+	});
+
 		$(function() {
+		
 			$("#siguiente").click(function(e) {
+				
 				// e.preventDefault();
 				var actionurl = e.currentTarget.action;
 				console.log($("#campovalidar").serialize());

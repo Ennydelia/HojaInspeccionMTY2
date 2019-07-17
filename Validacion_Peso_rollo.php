@@ -61,7 +61,7 @@
 									echo '</br>';
 									echo '</br>';
 									//aqui cambiar los IDs
-									echo '<form id="campovalidar" action="" method="post">';	
+									echo '<form id="campovalidar" action="" method="post" onkeydown="return event.key != "Enter";">';	
 									$count = 1;
 									while (odbc_fetch_row($resultado)) {
 										echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="1">ROLLO MADRE:</th><th><abbr title="'.odbc_result($resultado, 3).'-'.odbc_result($resultado, 4).'" rel="tooltip">PESO</abbr></th><th></th><th></th></tr>';
@@ -152,6 +152,15 @@
 	focusMethod = function getFocus() {           
   document.getElementById("input[type='number']").focus();
 }
+$('#campovalidar').bind('keydown', function(e) {
+			if ( $('#continuar').is(':visible') )	{
+				//Enter key
+				if (e.which == 13) {
+				  return false;
+				}
+		}
+	});
+
 //---------------------------------DATOS CORRECTOS----------------------------------------------//
 	$(function() {
 		$("#campovalidar").submit(function(e) {

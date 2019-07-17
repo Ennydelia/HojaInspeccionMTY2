@@ -170,6 +170,15 @@
 		 $(document).ready(function(){
 				$('#bodymain').loading('stop');
 			});
+			$('#campovalidar').bind('keydown', function(e) {
+			if ( $('#continuar').is(':visible') )	{
+				//Enter key
+				if (e.which == 13) {
+				  return false;
+				}
+		}
+	});
+
 
 //----------------------------SECCION DE REDIRECCIONAMIENTO DE VALIDACION------------------------
 			$("#campovalidar").on("click", function () {

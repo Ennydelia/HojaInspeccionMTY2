@@ -121,6 +121,16 @@
 					 $("input[type='number']").on("click", function () {
 							$(this).select();
 						});
+						$('#campovalidar').bind('keydown', function(e) {
+	if ( $('#continuar').is(':visible') )	{
+	
+												//Enter key
+												if (e.which == 13) {
+												  return false;
+												}
+											 
+	}
+});
 
 						$(function() {
 			$("#campovalidar").submit(function(e) {
