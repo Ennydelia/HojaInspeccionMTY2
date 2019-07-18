@@ -17,12 +17,10 @@
 				$conn = odbc_connect("Driver={SQL Server};Server=".$server2.";", $user2,$pass2);
 				if (!$conn)
 					die ("conexionerror");
-	
 					  $consulta = "select top 1 MACHINE_CD existe_wo from openquery(hgdb,'select MACHINE_CD from WK04_WO_HEADER where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]) ."'' ')";
 						$resultado = odbc_do($conn, $consulta); 
 						while (odbc_fetch_row($resultado)) {
 							$maquina = odbc_result($resultado, 1);
-
 							$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and FINAL_CHECK is NULL or FINAL_CHECK = 0 AND MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
 							$resultado = odbc_do($conn, $consulta); 
 							while (odbc_fetch_row($resultado)) {
@@ -45,21 +43,21 @@
 										$count = 1;
 										while (odbc_fetch_row($resultado)) {
 											echo '<tr>
-															<td>
-																<abbr title="'.odbc_result($resultado, 2).' - '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr>
-															</td>
-															<td>
-																<input style="width:100px;" autocomplete="off" autofocus="on" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'">
-															</td>
-														</tr>';
+												<td>
+													<abbr title="'.odbc_result($resultado, 2).' - '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr>
+												</td>
+												<td>
+													<input style="width:100px;" autocomplete="off" autofocus="on" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'">
+												</td>
+											</tr>';
 											$count++;
 										}
 										echo '<tr>
-														<td></td>
-														<td><input type="hidden" name="campo" value=" VAL_FIN_ANCHO"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;
-														<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td>
-														</tr>
-													</table></form>';
+											<td></td>
+											<td><input type="hidden" name="campo" value=" VAL_FIN_ANCHO"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;
+											<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td>
+										</tr>
+										</table></form>';
 //-------------------------------------AQUI VA EL SCRIPT DE VALIDACION-------------------------
 										echo" <script>
 											$(document).ready(function () {
@@ -71,7 +69,6 @@
 														$('#continuar').show();
 														$('#siguiente').hide();       
 														},
-							 
 													rules: {";
 														$consulta = "SELECT BOM_NO,  convert(varchar(20),MIN_ANCHO) MIN_ANCHO,  convert(varchar(20),MAX_ANCHO) MAX_ANCHO,  VAL_FIN_ANCHO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
 														$resultado = odbc_do($conn, $consulta);	
@@ -107,11 +104,10 @@
 								}
 							}
 						}
-			
-			?>
+					?>
+				</div>
+ 			</div>
 		</div>
- </div>
-</div>
 <br/>
 <!-- ------------------------------------------------------------------------------------------------------------------- -->
 
@@ -125,6 +121,7 @@
 		$("input[type='number']").on("click", function () {
 			$(this).select();
 		});
+//Invalida el la tecla enter al tener visible el boton continuar (Mandar a rechazo)
 		$('#campovalidar').bind('keydown', function(e) {
 			if ( $('#continuar').is(':visible') )	{
 				//Enter key
@@ -133,6 +130,7 @@
 				}
 		}
 	});
+	
 		$(function() {
 			$("#campovalidar").submit(function(e) {
 				e.preventDefault();

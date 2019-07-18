@@ -152,6 +152,8 @@
 	focusMethod = function getFocus() {           
   document.getElementById("input[type='number']").focus();
 }
+
+//Desactiva la tecla enter al tener visible el boton de rechazos
 $('#campovalidar').bind('keydown', function(e) {
 			if ( $('#continuar').is(':visible') )	{
 				//Enter key

@@ -174,6 +174,8 @@
 			$("#campovalidar").on("click", function () {
 				$(this).select();
 			});
+
+//Desactiva la tecla enter al tener visible el boton de rechazos			
 			$('#campovalidar').bind('keydown', function(e) {
 			if ( $('#continuar').is(':visible') )	{
 				//Enter key

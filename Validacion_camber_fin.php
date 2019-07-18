@@ -105,28 +105,27 @@
 			<br/>
 			<!-- ---------------------------------------------------------- -->
 
-			<!-- Optional JavaScript -->
-			<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-			<script src="js/pikaday.js"></script>
-			<link href="css/speech-input.css" rel="stylesheet">
-			<script src="js/speech-input.js"></script>
-			<script>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="js/pikaday.js"></script>
+	<link href="css/speech-input.css" rel="stylesheet">
+	<script src="js/speech-input.js"></script>
+	<script>
+	
+	$(document).ready(function(){
+		$('#bodymain').loading('stop');
+	});
 
-				
-				 $(document).ready(function()
-					 {
-							 $('#bodymain').loading('stop');
-					 });
-
-					 $("input[type='number']").on("click", function () {
-							$(this).select();
-						});
-						$('#campovalidar').bind('keydown', function(e) {
-			if ( $('#continuar').is(':visible') )	{
-				//Enter key
-				if (e.which == 13) {
-				  return false;
-				}
+	$("input[type='number']").on("click", function () {
+		$(this).select();
+	});
+//Desactiva la tecla enter al tener visible el boton de rechazo
+	$('#campovalidar').bind('keydown', function(e) {
+		if ( $('#continuar').is(':visible') )	{
+			//Enter key
+			if (e.which == 13) {
+				return false;
+			}
 		}
 	});
 

@@ -129,7 +129,7 @@
 		$("input[type='number']").on("click", function () {
 			$(this).select();
 		});
-	//DESABILITAR LA TECLA ENTER
+	//Desactiva la tecla enter al tener el boton de rechazo activo
 	$('#campovalidar').bind('keydown', function(e) {
 			if ( $('#continuar').is(':visible') )	{
 				//Enter key
