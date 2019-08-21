@@ -42,6 +42,8 @@
 									  $resultado = odbc_do($conn, $consulta); 
 									  echo "<center><h4>ETIQUETA OPERADOR</h4></center>";
 										echo "<center><h4>WO: ". strtoupper($_GET["wo"])."</h4></center>";
+										echo "<input type='hidden' name='wo_no' id='wo_no' value='". strtoupper($_GET["wo"])."'>";
+										echo "<input type='hidden' name='bom' id='bom' value='". strtoupper($_GET["bom"])."'>";	
 										echo "<input name='liberar' id='liberar' type='submit' class='btn btn-warning' style='float:right; display:none;' value='Liberar' onclick='Liberar()'>";
 										echo '</br>';
 										echo '</br>';
@@ -61,7 +63,7 @@
 									  // }
 									  // echo $Llamar;
 									  //AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------V
-									 echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ETI_OPERADOR"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
+									 echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ETI_OPERADOR"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="button" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
 
 									 //AQUI VA EL SCRIPT DE VALIDACION;
 									echo" <script>
@@ -159,11 +161,8 @@
 			});
 //Desactiva la tecla enter al tener visible del boton de rechazos
 			$('#campovalidar').bind('keydown', function(e) {
-			if ( $('#continuar').is(':visible') )	{
-				//Enter key
 				if (e.which == 13) {
 				  return false;
-				}
 		}
 	});
 
@@ -309,7 +308,7 @@
 		});	
 	}
 //------------------------------------------FUNCION PARA LIBERAR INFORMACION------------------------
-	function Liberar() {
+function Liberar() {
 		$.confirm({
     	title: 'Liberar informacion',
     	content: '' +

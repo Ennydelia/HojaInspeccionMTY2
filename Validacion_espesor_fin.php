@@ -47,7 +47,7 @@
 														echo '<tr><td><abbr title="'.odbc_result($resultado, 2).' - '.odbc_result($resultado, 3).'" rel="tooltip">'.odbc_result($resultado, 1).'</abbr></td><td><input style="width:100px;" autocomplete="off"  autofocus="on" lang="es" type="number" id="'.odbc_result($resultado, 1).'" name="'.odbc_result($resultado, 1).'" value="'.odbc_result($resultado, 4).'"></td></tr>';
 														$count++;
 													}
-													echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_FIN_ESPESOR"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
+													echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_FIN_ESPESOR"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="button" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
 //-------------------------------------AQUI VA EL SCRIPT DE VALIDACION-------------------------------------------------
 													echo" <script>
 														$(document).ready(function () {
@@ -119,13 +119,10 @@
 
 		//Desactiva la tecla enter al tener visible el boton de rechazos 
 		$('#campovalidar').bind('keydown', function(e) {
-			if ( $('#continuar').is(':visible') )	{
-				//Enter key
 				if (e.which == 13) {
 				  return false;
-				}
-		}
-	});
+			}
+		});
 
 		$(function() {
 			$("#campovalidar").submit(function(e) {

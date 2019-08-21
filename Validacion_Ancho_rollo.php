@@ -57,7 +57,7 @@
 									$count++;
 								}
 								//--- SE CREA EL BOTON DE CONTINUAR ---
-								echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ANCHO_INI"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
+								echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ANCHO_INI"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente"></form>&ensp;<input name="continuar" id="continuar" style="display:none;" type="button" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table>';
 								//--- INICIAMOS VALIDACION DE LOS 3 CAMPOS ---
 								echo" <script>
 									$(document).ready(function () {
@@ -128,16 +128,16 @@
 	});
 //Desactiva la tecla enter al tener activado el boton de rechazos
 	$('#campovalidar').bind('keydown', function(e) {
-			if ( $('#continuar').is(':visible') )	{
+			
 				//Enter key
 				if (e.which == 13) {
 				  return false;
 				}
-		}
+	
 	});
 //-------------------------------------------DATOS CORRECTOS-------------------------------------//
 	$(function() {
-		$("#campovalidar").submit(function(e) {
+		$("#siguiente").click(function(e) {
 			e.preventDefault();
 			var actionurl = e.currentTarget.action;
 			console.log($("#campovalidar").serialize());

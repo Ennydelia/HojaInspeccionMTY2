@@ -69,7 +69,7 @@
 										$count++;
 									}
 									//--- SE CREA EL BOTON DE CONTINUAR ---
-									echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_PESO_INI"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
+									echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_PESO_INI"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="button" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
 									//-----------------CREA CONDICION PARA REVISAR SI TIENE DATOS NULOS_-------------------
 									$consulta = "SELECT TOP 1 convert(varchar(20),PESO_INI) PESO_INI
 									FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RM] WHERE MOTHER_BOM = '". $FORMERBOM ."'";
@@ -141,7 +141,6 @@
 <script src="js/pikaday.js"></script>
 <link href="css/speech-input.css" rel="stylesheet">
 <script src="js/speech-input.js"></script>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script> -->
 <script>
   $(document).ready(function(){
 		$('#bodymain').loading('stop');
@@ -155,12 +154,10 @@
 
 //Desactiva la tecla enter al tener visible el boton de rechazos
 $('#campovalidar').bind('keydown', function(e) {
-			if ( $('#continuar').is(':visible') )	{
 				//Enter key
 				if (e.which == 13) {
 				  return false;
 				}
-		}
 	});
 
 //---------------------------------DATOS CORRECTOS----------------------------------------------//

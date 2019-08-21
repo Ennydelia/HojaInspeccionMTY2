@@ -49,7 +49,7 @@
 													$count++;
 												}
 												//AQUI SE CAMBIA EL CAMPO A INSERTAR -------------------------------
-												echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_CARLITE_FIN"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
+												echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_CARLITE_FIN"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="button" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
 												//<---------INICIAMOS CON LAS CONDICIONES PARA REVISAR EL TIPO DE FORMATO DEL CARLITE (NUMERO/LETRA)----->
 												//<--------REVISA LA CANTIDAD DE DATOS QUE CONTIENE EL ROLLO MADRE
 												$consulta = "SELECT COUNT(BOM_NO) AS BOM_NO  FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by BOM_NO";
@@ -177,11 +177,9 @@
 
 //Desactiva la tecla enter al tener visible el boton de rechazos			
 			$('#campovalidar').bind('keydown', function(e) {
-			if ( $('#continuar').is(':visible') )	{
 				//Enter key
 				if (e.which == 13) {
 				  return false;
-				}
 		}
 	});
 $(function() {

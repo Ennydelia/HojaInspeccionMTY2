@@ -59,7 +59,7 @@
 										$count++;
 									}
 									//--- SE CREA EL BOTON DE CONTINUAR ---
-									echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ESPESOR_INI"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
+									echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_ESPESOR_INI"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="button" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td></tr></table></form>';
 									echo" <script>
 										$(document).ready(function () {
 											$('#campovalidar').validate({ 
@@ -125,6 +125,7 @@
 <script>
   $(document).ready(function(){
 		$('#bodymain').loading('stop');
+		
 	});
 	$("input[type='number']").on("click", function () {
 		$(this).select();
@@ -132,12 +133,12 @@
 
 //Desactiva la tecla enter al tener visible el boton de rechazos 
 	$('#campovalidar').bind('keydown', function(e) {
-			if ( $('#continuar').is(':visible') )	{
+			
 				//Enter key
 				if (e.which == 13) {
 				  return false;
 				}
-		}
+	
 	});
 
 	$(function() {
@@ -176,6 +177,9 @@
 //---------------------------------------FUNCION QUE REDIRIGE A LA PAGINA DE RECHAOS INTERNOS
 //------------------FUNCION QUE REDIRIGE A LA PAGINA DE RECHAOS INTERNOS-------------------------------------
 function PagRec() {
+    		// bind to events
+
+  		
 		$.confirm({
 			title: 'Mandar a Rechazo Interno',
     	content: 'Para mandar a Rechazo es necesaria la clave de acceso:' +
@@ -265,7 +269,7 @@ function PagRec() {
       		//close
       	},
     	},
-    	onContentReady: function () {
+				onContentReady: function () {
     		// bind to events
     		var jc = this;
     		this.$content.find('form').on('submit', function (e) {
@@ -274,6 +278,7 @@ function PagRec() {
       		jc.$$formSubmit.trigger('click'); // reference the button and click it
     		});
   		}
+
 		});	
 	}
 //------------------------------------------FUNCION PARA LIBERAR INFORMACION------------------------

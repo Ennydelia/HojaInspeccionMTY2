@@ -54,7 +54,7 @@
         	        $count++;
 								} 													
 								echo '<tr><td></td><td><input type="hidden" name="campo" value="VAL_INI_REBABA_MOTOR"><input type="hidden" name="valor" value="VAL_INI_REBABA_OP">
-								<input type="hidden" name="bomm" id="bomm" value= '. strtoupper($_GET["bom"]).'><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="submit" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td><td></td></tr></table></form>';
+								<input type="hidden" name="bomm" id="bomm" value= '. strtoupper($_GET["bom"]).'><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;<input name="continuar" id="continuar" style="display:none;" type="button" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td><td></td></tr></table></form>';
 									//AQUI VA EL SCRIPT DE VALIDACION;
 								echo" <script>
 									$(document).ready(function () {
@@ -132,11 +132,9 @@
 			});
 			//Desactiva la tecla enter al tener el visible el boton de rechazos 
 			$('#campovalidar').bind('keydown', function(e) {
-			if ( $('#continuar').is(':visible') )	{
 				//Enter key
 				if (e.which == 13) {
 				  return false;
-				}
 		}
 	});
 
