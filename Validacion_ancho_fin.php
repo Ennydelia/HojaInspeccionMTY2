@@ -16,9 +16,11 @@
 		$resultado = odbc_do($conn, $consulta); 
 		while (odbc_fetch_row($resultado)) {
 			$FORMER_BOM = odbc_result($resultado, 1);
-			$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' and  VAL_FIN_ANCHO is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
+			$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' AND WO_NO = '". strtoupper($_GET["wo"]) ."' and  VAL_FIN_ANCHO is NULL";// IF HAY NULOS EN LA EVALUACION ANCHO_INICIO
 			$resultado = odbc_do($conn, $consulta);	
+			$yavalidado = 1;
 			while (odbc_fetch_row($resultado)) {
+				$yavalidado = 0;
 				if(odbc_result($resultado, 1) <> "0"){
 				}
 				else{
@@ -27,6 +29,10 @@
 					die();
 				}
 			}
+		}
+		if($yavalidado == 1){
+			header("Location: Validado.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+			die();
 		}
 	}
 ?>

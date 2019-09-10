@@ -5,7 +5,6 @@
 	<!-- Required meta tags -->
 			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-			<?php include("php/Pagina_inicio.php"); ?>
 			<!-- ------------------------- -->
 			<div class="container-fluid">
 				<div class="row">
@@ -28,9 +27,9 @@
 								$consulta2 = "EXEC[MTY_PROD_SSM].[dbo].[SP_INSPECCION_RM_MTY] @WO_NO = '". strtoupper($_GET["wo"]) ."'";
 								$resultado2 = odbc_do($conn, $consulta2);
 								$consulta4 = "EXEC[MTY_PROD_SSM].[dbo].[SP_INSPECCION_CORV_OND] @BOM_NO = '". strtoupper($_GET["bom"]) ."'";
-                $resultado4 = odbc_do($conn, $consulta4);
-                $consulta3 = "EXEC[MTY_PROD_SSM].[dbo].[SP_INSPECCION_OND_RM] @BOM_NO = '". strtoupper($_GET["bom"]) ."'";
-                $resultado3 = odbc_do($conn, $consulta3);
+								$resultado4 = odbc_do($conn, $consulta4);
+								$consulta3 = "EXEC[MTY_PROD_SSM].[dbo].[SP_INSPECCION_OND_RM] @BOM_NO = '". strtoupper($_GET["bom"]) ."'";
+								$resultado3 = odbc_do($conn, $consulta3);
 	
 								//-----CONSULTA PARA REVISAR SI EN EL ROLLO MADRE CONTIENE LA PALABRA 'VOLTRAN SA DE CV'--------
 								$consulta = "SELECT  MOTHER_BOM, CUSTOMER_NAME FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RM] WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and CUSTOMER_NAME ='VOLTRAN SA DE CV'";

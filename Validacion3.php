@@ -5,7 +5,6 @@
 	<!-- Required meta tags -->
 			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-			<?php include("php/Pagina_inicio.php"); ?>
 			<!-- ------------------------- -->
 			<div class="container-fluid">
 				<div class="row">
@@ -37,7 +36,7 @@
 										}										
 									 }
 									ELSE{
-										$consulta3 ="SELECT  COUNT(BOM_NO) AS BOM_NO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM ='" .strtoupper(($_GET["bom"])). "' AND VAL_ETI_OPERADOR IS NULL";
+										$consulta3 ="SELECT  COUNT(BOM_NO) AS BOM_NO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM ='" .strtoupper(($_GET["bom"])). "' AND WO_NO = '".strtoupper(($_GET["wo"])). "' AND VAL_ETI_OPERADOR IS NULL";
 									$resultado3 = odbc_do($conn, $consulta3); 			
 									$yavalidado2 = 1;
 									$Contador2 = odbc_result($resultado3, 1);
@@ -50,7 +49,7 @@
 										die;
 										}										
 									 }
-									 ELSE{
+									 if($yavalidado2 ==1){
 									header("Location: Validacion_Comentarios.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
 									die();
 									 }

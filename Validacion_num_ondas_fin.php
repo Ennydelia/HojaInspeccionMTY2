@@ -23,6 +23,11 @@
 			while (odbc_fetch_row($resultado)) {
 				if(odbc_result($resultado, 1) <> "0"){
 				}
+				else{
+					//REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
+					header("Location: Validacion_camber_fin.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+					die();
+				}
 			}
 		}
 	}

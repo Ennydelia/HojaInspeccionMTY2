@@ -30,6 +30,10 @@
 				}
 			}
 		}
+		if($yavalidado == 1){
+			header("Location: Validado.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+			die();
+		}
 	}
 ?>
 <!-- INICIO DISEÑO HTML/PHP PARA VALIDACION DE DATOS -->

@@ -28,6 +28,10 @@
 				}
 			}
 		}
+		if($yavalidado == 1){
+			header("Location: Validado.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+			die();
+		}
 	}
 ?>
 <!DOCTYPE HTML>

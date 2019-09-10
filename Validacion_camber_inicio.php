@@ -22,13 +22,17 @@
 			$resultado = odbc_do($conn, $consulta);	
 			while (odbc_fetch_row($resultado)) {
 		  		if(odbc_result($resultado, 1) <> "0"){
-				  }
-				  else{
-					//REDIRIGE A LA SIGUIENTE EVALUCION (CARLITE INICIAL)
-						header("Location: Validacion_carlite_inicio.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
-						die();
-					}
+				}
+				else{
+				//REDIRIGE A LA SIGUIENTE EVALUCION (CARLITE INICIAL)
+					header("Location: Validacion_carlite_inicio.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+					die();
+				}
 			}
+		}
+		if($yavalidado == 1){
+			header("Location: Validado.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+			die();
 		}
 	}
 ?>

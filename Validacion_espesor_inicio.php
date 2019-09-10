@@ -32,7 +32,7 @@
 		}
 		if($yavalidado == 1){
 			//REDIRIGE A LA SIGUIENTE EVALUCION (REBABA INICIAL)
-			header("Location: Validacion_rebaba_inicio.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+			header("Location: Validado.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
 			die();				
 		}
 	}

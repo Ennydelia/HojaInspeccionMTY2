@@ -5,7 +5,6 @@
 	<!-- Required meta tags -->
 			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-			<?php include("php/Pagina_inicio.php"); ?>
 			<!-- ------------------------- -->
 			<div class="container-fluid">
 				<div class="row">
@@ -30,7 +29,7 @@
 								$consulta2 = "EXEC[MTY_PROD_SSM].[dbo].[SP_INSPECCION_RM_MTY] @WO_NO = '". strtoupper($_GET["wo"]) ."'";
 								$resultado2 = odbc_do($conn, $consulta2);
 								//-----CONSULTA PARA REVISAR SI EN EL ROLLO MADRE CONTIENE LA PALABRA 'VOLTRAN SA DE CV'--------
-								$consulta = "SELECT MOTHER_BOM, CUSTOMER_NAME FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RM] WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and CUSTOMER_NAME ='INDUSTRIAL CONNECTIONS & SOLUTIONS LLC'";
+								$consulta = "SELECT MOTHER_BOM, CUSTOMER_NAME FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RM] WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' AND WO_NO = '". strtoupper($_GET["wo"]) ."' and CUSTOMER_NAME ='INDUSTRIAL CONNECTIONS & SOLUTIONS LLC'";
 								$resultado = odbc_do($conn, $consulta); 			
 								$yavalidado = 1;
 								$count2 = 1;
