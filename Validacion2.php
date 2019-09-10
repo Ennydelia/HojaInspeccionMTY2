@@ -33,6 +33,7 @@
 								$consulta = "SELECT MOTHER_BOM, CUSTOMER_NAME FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RM] WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and CUSTOMER_NAME ='INDUSTRIAL CONNECTIONS & SOLUTIONS LLC'";
 								$resultado = odbc_do($conn, $consulta); 			
 								$yavalidado = 1;
+								$count2 = 1;
 							  while (odbc_fetch_row($resultado)) {
 									$yavalidado = 0;
 									if($yavalidado == 0){

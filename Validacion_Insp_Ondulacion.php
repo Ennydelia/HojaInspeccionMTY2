@@ -1,3 +1,30 @@
+<?php
+	include("php/variables.php");
+	$conn = odbc_connect("Driver={SQL Server};Server=".$server2.";", $user2,$pass2);
+	if (!$conn)
+		die ("conexionerror");
+	if(isset($_GET['bom'])){
+		//REGISTRA LOS DATOS DEL ROLLO MADRE
+		$consulta = "EXEC[MTY_PROD_SSM].[dbo].[SP_BOMS_INSPECCION_MTY] @WO_NO = '". strtoupper($_GET["wo"]) ."'";
+		$resultado1 = odbc_do($conn, $consulta);
+		$consulta2 = "EXEC[MTY_PROD_SSM].[dbo].[SP_INSPECCION_RM_MTY] @WO_NO = '". strtoupper($_GET["wo"]) ."'";
+		$resultado2 = odbc_do($conn, $consulta2);
+		$consulta3 = "EXEC[MTY_PROD_SSM].[dbo].[SP_INSPECCION_OND_RM] @BOM_NO = '". strtoupper($_GET["bom"]) ."'";
+		$resultado3 = odbc_do($conn, $consulta3);	
+		//-----INSPECCIONA QUE LOS DATOS NO HAYAN SIDO AGREGADOS ANTERIORMENTE----
+		$consulta = "SELECT count(*) EDO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_OND_RM] WHERE BOM_NO = '". strtoupper($_GET["bom"]) ."' and NUM_OND is NULL ";
+		$resultado = odbc_do($conn, $consulta);
+		while (odbc_fetch_row($resultado)) {
+			if(odbc_result($resultado, 1) <> "0"){
+			}
+			else{
+				header("Location: Validacion_Peso_rollo.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+				die();
+			}
+		}
+	}	
+?>
+
 <!DOCTYPE HTML>
 <html lang="es">
 	 <head>
@@ -78,9 +105,6 @@
 
 
 					else{
-
-						header("Location: Validacion_Peso_rollo.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
-										die();
 					}
 				}
 			}
