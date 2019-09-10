@@ -35,7 +35,7 @@
               }else{
 
                         
-                echo "<h3>La Siguiente Work Order:".strtoupper($_GET["wo"])." ".strtoupper($_GET["bom"])." ya ha sido Validada/Mandada a Rechazo</h3>";
+                echo "<h3>La Siguiente Work Order:".strtoupper($_GET["wo"])." ".strtoupper($_GET["bom"])." ya ha sido Validada anteriormente</h3>";
                 //echo '<meta http-equiv="refresh" content="0;url=ImprimirWO.php?wo='.$_GET["wo"].'&bom='.$_GET["bom"].'">';
 
 

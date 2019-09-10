@@ -101,6 +101,8 @@
 	<script src="js/jquery.validate.min.js"></script>
 	<script src="js/additional-methods.min.js"></script>
 
+	
+
 
 	<body id="bodymain">
 		<script> $('#bodymain').loading();</script>
@@ -124,7 +126,21 @@
 					<li><a href="http://serlam2/servilaminamty/HojaInspeccion/HojaInspeccionSLT2.aspx"target="_blank">Imprimir WO NO</a></li>
 					
 					<li><a href="http://mtyserlam1v1:8080/mtyblog/wp-login.php" target="_blank">Blog Rechazos Internos</a></li>
-					<li><a href="php/logout.php?user=<?php echo $_SESSION['USSER'];?>" style="color:#797979";>Salir</a></li>
-				</ul> 
+					<?php
+						if ($_SESSION['ISAUTH'] == 'QA2' ||$_SESSION['ISAUTH'] == 'AD3'  ){
+							echo '<li><a href="/HojaInspeccionMTY/ReporteInspeccion.php">Reporte Calidad</a></li>';
+						}
+					?>
+					
+				</ul>
+                <ul class="nav navbar-nav navbar-right">
+				<!-- <li><a><?php echo $_SESSION['USSERNAME'];?></a></li> -->
+				<li><a href="php/logout.php?user=<?php echo $_SESSION['USSER'];?>">Cerrar Sesion</a></li>
+                </ul>
+				
 			</div>   
 		</nav>
+
+
+
+
