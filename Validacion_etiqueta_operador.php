@@ -12,7 +12,7 @@
 	$resultado = odbc_do($conn, $consulta); 
 	while (odbc_fetch_row($resultado)) {
 		$maquina = odbc_result($resultado, 1);//ESTA ES LA MAQUINA DONDE SE CORTA SLITTER SE MIDE AL PRINCIPIO Y AL FINAL
-    	$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' AND WO_NO = '". strtoupper($_GET["wo"]) ."' and VAL_ETI_OPERADOR IS NULL AND MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' AND WO_NO = '". strtoupper($_GET["wo"]) ."' order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
+    	$consulta = "select MOTHER_BOM from [MTY_PROD_SSM].[dbo].[SSM_INSPECCION]  WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' AND WO_NO = '". strtoupper($_GET["wo"]) ."' and VAL_CARLITE_FIN IS NULL AND MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' AND WO_NO = '". strtoupper($_GET["wo"]) ."' order by PROD_LINE_NO";//OBTIENE LOS FORMERS BOMS DE ESE WO
 		$resultado = odbc_do($conn, $consulta);  
 		$yavalidado = 1;
 		while (odbc_fetch_row($resultado)) {
@@ -32,7 +32,7 @@
 			}
 		}
 		if($yavalidado == 1){
-			header("Location: Validacion_etiqueta_supervisor.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+			header("Location: Validacion3.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
 			die();
 		}
 	}

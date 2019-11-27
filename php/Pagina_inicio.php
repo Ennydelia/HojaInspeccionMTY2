@@ -131,6 +131,11 @@
 							echo '<li><a href="/HojaInspeccionMTY/ReporteInspeccion.php">Reporte Calidad</a></li>';
 						}
 					?>
+					<?php
+						if ($_SESSION['ISAUTH'] == 'EN' ||$_SESSION['ISAUTH'] == 'AD3'  ){
+							echo '<li><a href="/HojaInspeccionMTY/ReporteIngenieria.php">Reporte Ingenieria</a></li>';
+						}
+					?>
 					
 				</ul>
                 <ul class="nav navbar-nav navbar-right">

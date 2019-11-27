@@ -79,7 +79,7 @@
 					echo '<tr><td></td><td><input type="hidden" name="campo" value=" VAL_FIN_ANCHO"><input name="siguiente" id="siguiente" type="submit" class="btn btn-primary" value="Siguiente">&ensp;
 					<input name="continuar" id="continuar" style="display:none;" type="button" value="Mandar a Rechazo" class="btn btn-danger"onclick="PagRec()"></td>
 					</tr></table></form>';
-	//-------------------------------------AQUI VA EL SCRIPT DE VALIDACION-------------------------
+	//-------------------------------------SCRIPT DE VALIDACION-------------------------
 					echo" <script>
 						$(document).ready(function () {
 							$('#campovalidar').validate({ 

@@ -62,6 +62,7 @@
 				<th>REBABA OP FIN</th>
 				<th>REBABA MOT FIN</th>
                 <th>ONDULACION FIN</th>  
+				<th>FECHA GUARDADO</th> 
             </tr>
         </thead>
 			<?php
@@ -73,7 +74,7 @@
 					if (!$conn)
 						die ("conexionerror");
 					$consulta = "SELECT  CLIENTE, WO_NO, MOTHER_BOM, BOM_NO, VAL_INI_ANCHO, VAL_INI_ESPESOR, VAL_INI_REBABA_MOTOR, VAL_INI_REBABA_OP, VAL_ONDULACION_INI, VAL_FIN_ANCHO, VAL_FIN_ESPESOR, 
-					VAL_FIN_REBABA_MOTOR, VAL_FIN_REBABA_OP, VAL_ONDULACION_FIN, ANCHO, ESPESOR, REBABA, ONDULACIONES FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE FINAL_CHECK = 1  AND CLIENTE LIKE '%".$selected_val ."%' order by UPDATE_DATE";
+					VAL_FIN_REBABA_MOTOR, VAL_FIN_REBABA_OP, VAL_ONDULACION_FIN, ANCHO, ESPESOR, REBABA, ONDULACIONES, UPDATE_DATE FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE FINAL_CHECK = 1  AND CLIENTE LIKE '%".$selected_val ."%' order by UPDATE_DATE";
 					$resultado = odbc_do($conn, $consulta);
 					echo '<tbody>';
 					while (odbc_fetch_row($resultado)) {
@@ -97,6 +98,7 @@
 						echo '<th>'.floatval(odbc_result($resultado, 12)).'</th>';
 						echo '<th>'.floatval(odbc_result($resultado, 13)).'</th>';
 						echo '<th>'.floatval(odbc_result($resultado, 14)).'</th>';
+						echo '<th>'.odbc_result($resultado, 19).'</th>';	
 						echo '</tr>';
 						
 					} 
