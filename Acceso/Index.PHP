@@ -10,7 +10,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>HOJA INSPECCION SLT2</title>
+  <title>HOJA INSPECCION SLT</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="../css/sticky-footer-navbar.css">
@@ -40,7 +40,7 @@
     <ons-page>
     <div class="login-form">
     <form id="formulario" method="POST" action="acceso.php">
-    <center><h3>HOJA DE INSPECCION SLT2</h3></center>
+    <center><h3>HOJA DE INSPECCION SLT</h3></center>
         <input type="text" class="text-input--underbar" placeholder="Usuario HG" name="Username" value="" autofocus="" required>
         <input type="password" class="text-input--underbar" placeholder="Contraseña HG" name="password" value="" required>
         <br><br>

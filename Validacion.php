@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="es">
 <head>
-	<title>Hoja de Inspeccion SLT2</title>
+	<title>Hoja de Inspeccion SLT</title>
 	<!-- Required meta tags -->
 			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

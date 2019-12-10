@@ -119,7 +119,7 @@
 		<nav class="navbar navbar-expand-lg navbarlight bg-light" style="background-color: #F7F7F7;">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<a class="navbar-brand" font size="20">Hoja de Inspeccion SLT2</a>
+					<a class="navbar-brand" font size="20">Hoja de Inspeccion SLT</a>
 				</div>
 				<ul class="nav navbar-nav">
 					<li><a href="/HojaInspeccionMTY">Nueva WO NO</a></li>

@@ -36,7 +36,7 @@
 <!DOCTYPE HTML>
 <html lang="es">
 <head>
-<title>Hoja de Inspeccion SLT2</title>
+<title>Hoja de Inspeccion SLT</title>
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -200,7 +200,7 @@ function PagRec() {
           action: function () {
       	    var name = this.$content.find('.password').val();
 						//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-						if(name == 'CT101010' || name == 'JJ651510' ||name == 'FP654417' || name == 'AS622461' ||name == "IO734384"||name == 'IO731603' || name == 'IO756514'||name == 'SP916101' || name == 'SP957102'||name == 'SP936703' || name == 'SP991604'||name == 'SP988605'||name == 'SP948506'||name == 'SP928607'||name == 'SP908908'||name == 'SP968009' ||name =='SP934311' ) 
+						if(name == 'CT101010' || name == 'JJ651510' ||name == 'FP654417' || name == 'AS622461' ||name == "IO734384"||name == 'IO731603' || name == 'IO756514'||name == 'SP916101' || name == 'SP957102'||name == 'SP936703' || name == 'SP991604'||name == 'SP988605'||name == 'SP948506'||name == 'SP928607'||name == 'SP908908'||name == 'SP985361' ||name =='SP934311' ) 
 			  		{
 							if(name=="CT101010"){$user="Carlos Tovar"}
 							if(name=="JJ651510"){$user="Jessica Jimenez"}
@@ -217,7 +217,7 @@ function PagRec() {
 							if(name=="SP948506"){$user="Adrián Saucedo"}
 							if(name=="SP928607"){$user="Mauricio Lumbreras"}
 							if(name=="SP908908"){$user="Luciano Platas"}
-							if(name=="SP968009"){$user="Blas Escobar"}
+							if(name=="SP985361"){$user="Blas Escobar"}
 							if(name=="SP934311"){$user="Orlando Morales"}
 							$tipo = "Rechazo";
 							$wo_no = document.getElementById("wo_no").value; 
@@ -303,7 +303,7 @@ function PagRec() {
   	      action: function () {
     	    	var name = this.$content.find('.name').val();
 				  	//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-					  if(name == 'CT101010' || name == 'JJ651510' ||name == 'FP654417' || name == 'AS622461' ||name == "IO734384"||name == 'IO731603' || name == 'IO756514'||name == 'SP916101' || name == 'SP957102'||name == 'SP936703' || name == 'SP991604'||name == 'SP988605'||name == 'SP948506'||name == 'SP928607'||name == 'SP908908'||name == 'SP968009' ||name =='SP934311' ) 
+					  if(name == 'CT101010' || name == 'JJ651510' ||name == 'FP654417' || name == 'AS622461' ||name == "IO734384"||name == 'IO731603' || name == 'IO756514'||name == 'SP916101' || name == 'SP957102'||name == 'SP936703' || name == 'SP991604'||name == 'SP988605'||name == 'SP948506'||name == 'SP928607'||name == 'SP908908'||name == 'SP985361' ||name =='SP934311' ) 
 			  		{
 							if(name=="CT101010"){$user="Carlos Tovar"}
 							if(name=="JJ651510"){$user="Jessica Jimenez"}
@@ -320,7 +320,7 @@ function PagRec() {
 							if(name=="SP948506"){$user="Adrián Saucedo"}
 							if(name=="SP928607"){$user="Mauricio Lumbreras"}
 							if(name=="SP908908"){$user="Luciano Platas"}
-							if(name=="SP968009"){$user="Blas Escobar"}
+							if(name=="SP985361"){$user="Blas Escobar"}
 							if(name=="SP934311"){$user="Orlando Morales"}
 							$tipo = "Liberacion";
 							$wo_no = document.getElementById("wo_no").value; 
