@@ -1,29 +1,28 @@
 ﻿<!DOCTYPE HTML>
 <html lang="es">
 <head>
-	<title>Hoja de Inspeccion SLT2</title>
+	<title>Hoja de Inspeccion Slitter</title>
 	<!-- Required meta tags -->
-			<meta charset="utf-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-			<?php include("php/Pagina_inicio.php"); ?>
-			<!-- ------------------------- -->
-			<div class="container-fluid">
-				<div class="row">
-					<div class= "col-lg-12 col-md-12 col-sm-12">
-						<?php
-						include("php/variables.php");
-						$_GET["wo"] = str_replace(" ","",$_GET["wo"]);
-						$_GET["bom"] = str_replace(" ","",$_GET["bom"]);
-						$conn = odbc_connect("Driver={SQL Server};Server=".$server2.";", $user2,$pass2);
-						if (!$conn)
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- ------------------------- -->
+	<div class="container-fluid">
+		<div class="row">
+			<div class= "col-lg-12 col-md-12 col-sm-12">
+				<?php
+					include("php/variables.php");
+					$_GET["wo"] = str_replace(" ","",$_GET["wo"]);
+					$_GET["bom"] = str_replace(" ","",$_GET["bom"]);
+					$conn = odbc_connect("Driver={SQL Server};Server=".$server2.";", $user2,$pass2);
+					if (!$conn)
 						die ("conexionerror");
 					//------ INICIAMOS CON LA BUSQUEDA DE DATOS DEPENDIENDO DEL ROLLO MADRE (BOM_NO) ---------
 					$consulta = "select count(WO_NO) existe_wo from openquery(hgdb,'select WO_NO from WK07_WO_RM where company_cd = ''MTY'' and WO_NO = ''". strtoupper($_GET["wo"]). "'' and BOM_NO = ''". strtoupper($_GET["bom"]) ."'' ')";
-						$resultado = odbc_do($conn, $consulta); 
+					$resultado = odbc_do($conn, $consulta); 
 					while (odbc_fetch_row($resultado)) {
 						if (odbc_result($resultado, 1) == "0"){
-						echo "<script>$('#bodymain').loading('stop');</script>";
-						echo "<h3>". strtoupper($_GET["wo"]) . " o " . strtoupper($_GET["bom"]) ." no existen.</h3>";
+							echo "<script>$('#bodymain').loading('stop');</script>";
+							echo "<h3>". strtoupper($_GET["wo"]) . " o " . strtoupper($_GET["bom"]) ." no existen.</h3>";
 						}
 						else{
 							//------ BUSCAMOS LA MAQUINA EN LA QUE SE REALIZA LA INSPECCION O CORTE (WO_NO) -------
@@ -40,7 +39,7 @@
 								$consulta = "SELECT MOTHER_BOM, CUSTOMER_NAME FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION_RM_RECHAZO] WHERE MOTHER_BOM = '". strtoupper($_GET["bom"]) ."' and CUSTOMER_NAME ='INDUSTRIAL CONNECTIONS & SOLUTIONS LLC'";
 								$resultado = odbc_do($conn, $consulta); 			
 								$yavalidado = 1;
-							  while (odbc_fetch_row($resultado)) {
+							  	while (odbc_fetch_row($resultado)) {
 									$yavalidado = 0;
 									if($yavalidado == 0){
 										//MUESTRA INSPECCION_ONDULAION
@@ -50,11 +49,11 @@
 								}
 								$count2 ++;
 							}	
-						if($yavalidado ==1){
+							if($yavalidado ==1){
 							
-							header("Location: Rechazo_tensiones.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
-							die();
+								header("Location: Rechazo_tensiones.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
+								die();
+							}
 						}
 					}
-				}
-			?>
+				?>

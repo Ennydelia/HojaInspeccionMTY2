@@ -42,7 +42,7 @@
 <!DOCTYPE HTML>
 <html lang="es">
 <head>
-<title>Hoja de Inspeccion SLT</title>
+<title>Hoja de Inspeccion Slitter</title>
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -133,9 +133,9 @@
 		</div>
 	</div>
 </div>
- <!-- ---------------------------------------------------------- -->
+<!-- ---------------------------------------------------------- -->
 
- <script src="js/pikaday.js"></script>
+<script src="js/pikaday.js"></script>
 <link href="css/speech-input.css" rel="stylesheet">
 <script src="js/speech-input.js"></script>
 <script>
@@ -179,7 +179,6 @@
 							else if(res[0]=="Ok"){
 								toastr.success(res[1], 'Datos correctos', {timeOut: 2500, positionClass: "toast-top-center"});
                					window.location.replace("Validacion_ondulacion_inicio.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-             				//}
 							}
 							else{
 								toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
@@ -189,189 +188,320 @@
 				}
 			});
 		});
-
-//------- FUNCION PARA MANDAR A RECHAZOS ----
-	function PagRec() {
+	//------------------FUNCION QUE REDIRIGE A LA PAGINA DE RECHAOS INTERNOS-------------------------------------
+	function PagRec(){
 		$.confirm({
 			title: 'Mandar a Rechazo Interno',
-    		content: 'Para mandar a Rechazo es necesaria la clave de acceso:' +
-    		'<form action="" class="formName">' +
-    		'<div class="form-group">' +		
-    		'<input type="password" placeholder="clave" class="password form-control" required />' +
-    		'</div>' +
-   			'</form>',
-    		buttons: {
-      			formSubmit: {
-      	  			text: 'Aceptar',
-          			btnClass: 'btn-red',
-          			action: function () {
-      	    			var name = this.$content.find('.password').val();
-						//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-						if(name == 'CT101010' || name == 'JJ651510' ||name == 'FP654417' || name == 'AS622461' ||name == "IO734384"||name == 'IO731603' || name == 'IO756514'||name == 'SP916101' || name == 'SP957102'||name == 'SP936703' || name == 'SP991604'||name == 'SP988605'||name == 'SP948506'||name == 'SP928607'||name == 'SP908908'||name == 'SP985361' ||name =='SP934311' ) 
-			  			{
-							if(name=="CT101010"){$user="Carlos Tovar"}
-							if(name=="JJ651510"){$user="Jessica Jimenez"}
-        					if(name=="FP654417"){$user="Fernanda Perales"}
-        					if(name=="AS622461"){$user="Alfredo Silva"}
-        					if(name=="IO734384"){$user="Roberto Guerrero"}
-        					if(name=="IO731603"){$user="Rene Nolasco"}
-							if(name=="IO756514"){$user="Inspector 3"}
-        					if(name=="SP916101"){$user="Carlos Valdez"}
-							if(name=="SP957102"){$user="Carlos Domínguez"}
-							if(name=="SP936703"){$user="Ricardo Garcia"}
-							if(name=="SP991604"){$user="Roberto Cerda"}
-							if(name=="SP988605"){$user="Noe Mendoza"}
-							if(name=="SP948506"){$user="Adrián Saucedo"}
-							if(name=="SP928607"){$user="Mauricio Lumbreras"}
-							if(name=="SP908908"){$user="Luciano Platas"}
-							if(name=="SP985361"){$user="Blas Escobar"}
-							if(name=="SP934311"){$user="Orlando Morales"}
-							$tipo = "Rechazo";
-							$wo_no = document.getElementById("wo_no").value; 
-							$mother_bom = document.getElementById("bom").value; 
-							$lugar = "Validacion Rebaba inicio";
-							$.alert('Mandado a rechazo por: ' + $user);
-							$(function() {
-								$.ajax({
-	                				type: "POST",
-                					url: "insertpersonal.php",
-                					data:{
-                 						'Tipo_Liberacion' : $tipo,
-                 						'Libero' :$user,
-                  						'wo_no' : $wo_no,
-              	  						'mother_bom': $mother_bom,
-										'lugar': $lugar
-									},
-								});
-							});
-							$(function() {
-								console.log($("#campovalidar").serialize());
-								$.ajax({
-									url: "insert_valores.php",
-									type: 'post',
-									data: $("#campovalidar").serialize(),
-									success: function(data) {
-										var str = data;
-										var res = str.split(",");							
-										if(res[0]=="Error"){
-											toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
-											$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
+			content: 'Para mandar a Rechazo es necesaria la clave de acceso:'+
+			'<form action="" class="formName">'+
+			'<div class="form-group">'+
+			'<input type= "password" placeholder="CLAVE HG" class="password form-control" required/>'+
+			'</div>'+
+			'</form>',
+			buttons: {
+				formSumbit: {
+					text: 'Aceptar',
+					btnClass: 'btn-red',
+					action: function(){
+						var user_id = this.$content.find('.password').val();
+						var user2 = this.$content.find('.name2').val();
+						$.ajax({
+							type:'POST',
+							url:'getData.php',
+							dataType: "json",
+							data:{user_id:user_id},
+							success:function(data){
+								if(data.status == 'ok'){
+									$tipo = "Rechazo";
+									$wo_no = document.getElementById("wo_no").value; 
+									$mother_bom = document.getElementById("bom").value; 
+									$lugar = "Validacion Rebaba inicio";
+									$(function() {
+										$.ajax({
+											type: "POST",
+											url: "insertpersonal.php",
+											data:{
+												'Tipo_Liberacion' : $tipo,
+												'wo_no' : $wo_no,
+												'mother_bom': $mother_bom,
+												'lugar': $lugar,
+												user_id:user_id,
+												user: user2
+											},
+										});
+									});
+									$(function() {
+										console.log($("#campovalidar").serialize());
+										$.ajax({
+											url: "insert_valores.php",
+											type: 'post',
+											data: $("#campovalidar").serialize(),
+											success: function(data) {
+												var str = data;
+												var res = str.split(",");							
+												if(res[0]=="Error"){
+													toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
+													$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
+												}
+												else if(res[0]=="Warning"){
+													toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
+												}
+												else if(res[0]=="Ok"){
+													toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
+													window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
+													window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+												}
+												else{
+													toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
+												}
+											}
+										});			
+									});		
+									$.alert("Rechazado");
+									var validator = $( "#campovalidar" ).validate();
+									validator.resetForm();	
+									$("#continuar").hide();
+									$("#siguiente").show();
+									$("#liberar").hide();
+								}
+								else if(data.status == 'duplicado'){
+									$.confirm({
+										title: 'Clave duplicada',
+										content: 'Ingresa tu Nombre de usuario para validar'+
+										'<form action="" class="formName">'+
+										'<div class="form-group">'+
+										'<input type="text" placeholder="USUARIO HG" class="name form-control" required/>'+
+										'</div>'+
+										'</form>',
+										buttons:{
+											formsubmit:{
+												text: 'Aceptar',
+												btnClass: 'btn-red',
+												action: function(){
+													var user2 = this.$content.find('.name').val();
+													$.ajax({
+														type:'POST',
+            	 										url:'getData2.php',
+            											dataType: "json",
+														data:{user:user2,
+														user_id:user_id},
+            											success:function(data){
+                											if(data.status == 'ok'){
+																$tipo = "Rechazo";
+																$wo_no = document.getElementById("wo_no").value; 
+																$mother_bom = document.getElementById("bom").value; 
+																$lugar = "Validacion Rebaba inicio";
+																$(function() {
+																	$.ajax({
+																		type: "POST",
+																		url: "insertpersonal.php",
+																		data:{
+																			'Tipo_Liberacion' : $tipo,
+																			'wo_no' : $wo_no,
+																			'mother_bom': $mother_bom,
+																			'lugar': $lugar,
+																			user_id:user_id,
+																			user: user2
+																		}
+																	});
+																});
+																$(function() {
+																	console.log($("#campovalidar").serialize());
+																	$.ajax({
+																		url: "insert_valores.php",
+																		type: 'post',
+																		data: $("#campovalidar").serialize(),
+																		success: function(data) {
+																			var str = data;
+																			var res = str.split(",");							
+																			if(res[0]=="Error"){
+																				toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
+																				$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
+																			}
+																			else if(res[0]=="Warning"){
+																				toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
+																			}
+																			else if(res[0]=="Ok"){
+																				toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
+																				window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
+																				window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+																			}
+																			else{
+																				toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
+																			}	
+																		}
+																	});			
+																});
+																$.alert("Rechazado");
+																var validator = $( "#campovalidar" ).validate();
+																validator.resetForm();	
+																$("#continuar").hide();
+																$("#siguiente").show();
+																$("#liberar").hide();
+															}
+															else{
+																$.alert("Falta escribir usuario/usuario erroneo");
+																return false;
+															}
+														}
+													});
+												}
+											}
 										}
-										else if(res[0]=="Warning"){
-											toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
-										}
-										else if(res[0]=="Ok"){
-											toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
-											window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
-											window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-										}
-										else{
-											toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
-										}
-									}
-								});			
-							});		
-			          	}
-						else{
-							$.alert('Clave incorrecta');
-  	        				return false;
-    	      			}
+									});
+								}
+								else{
+									$.alert("Falta escribir clave/Clave erronea");
+								 	return false;
+								}
+							}
+						});
 					}
-      			},
-      			cancel: function () {
-      				//close
-      			},
-    		},
-    		onContentReady: function () {
-	    		// bind to events
+				}
+			},
+			cancel: function () {
+			  },
+			  onContentReady: function () {
+    			// bind to events
     			var jc = this;
     			this.$content.find('form').on('submit', function (e) {
-     				// if the user submits the form by pressing enter in the field.
-      			e.preventDefault();
-      			jc.$$formSubmit.trigger('click'); // reference the button and click it
+     			// if the user submits the form by pressing enter in the field.
+      				e.preventDefault();
+      				jc.$$formSubmit.trigger('click'); // reference the button and click it
     			});
   			}
-		});	
+		});
 	}
+		
 //------------------------------------------FUNCION PARA LIBERAR INFORMACION------------------------
 	function Liberar() {
 		$.confirm({
-    	title: 'Liberar informacion',
-    	content: '' +
-    	'<form action="" class="formName">' +
-    	'<div class="form-group">' +
-    	'<input type="password" placeholder="clave" class="name form-control" required />' +
-    	'</div>' +
-   		'</form>',
-	  	buttons: {
-    		formSubmit: {
- 		       	text: 'Aceptar',
-	    	    btnClass: 'btn-red',
-  	      		action: function () {
-    	    		var name = this.$content.find('.name').val();
-				  	//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-					  if(name == 'CT101010' || name == 'JJ651510' ||name == 'FP654417' || name == 'AS622461' ||name == "IO734384"||name == 'IO731603' || name == 'IO756514'||name == 'SP916101' || name == 'SP957102'||name == 'SP936703' || name == 'SP991604'||name == 'SP988605'||name == 'SP948506'||name == 'SP928607'||name == 'SP908908'||name == 'SP985361' ||name =='SP934311' ) 
-			  			{
-							if(name=="CT101010"){$user="Carlos Tovar"}
-							if(name=="JJ651510"){$user="Jessica Jimenez"}
-        					if(name=="FP654417"){$user="Fernanda Perales"}
-        					if(name=="AS622461"){$user="Alfredo Silva"}
-        					if(name=="IO734384"){$user="Roberto Guerrero"}
-        					if(name=="IO731603"){$user="Rene Nolasco"}
-							if(name=="IO756514"){$user="Inspector 3"}
-        					if(name=="SP916101"){$user="Carlos Valdez"}
-							if(name=="SP957102"){$user="Carlos Domínguez"}
-							if(name=="SP936703"){$user="Ricardo Garcia"}
-							if(name=="SP991604"){$user="Roberto Cerda"}
-							if(name=="SP988605"){$user="Noe Mendoza"}
-							if(name=="SP948506"){$user="Adrián Saucedo"}
-							if(name=="SP928607"){$user="Mauricio Lumbreras"}
-							if(name=="SP908908"){$user="Luciano Platas"}
-							if(name=="SP985361"){$user="Blas Escobar"}
-							if(name=="SP934311"){$user="Orlando Morales"}
-							$tipo = "Liberacion";
-							$wo_no = document.getElementById("wo_no").value; 
-							$mother_bom = document.getElementById("bom").value; 
-							$lugar = "Validacion Rebaba Inicio";
-							$.alert('Datos desbloqueados por: ' + $user);
-							$(function() {
-								$.ajax({
-  	              					type: "POST",
-    	            				url: "insertpersonal.php",
-				      	          data:{
-        	    				     	'Tipo_Liberacion' : $tipo,
-          	       						'Libero' :$user,
-            	      					'wo_no' : $wo_no,
-              		  					'mother_bom': $mother_bom,
-										'lugar': $lugar
-									},
-								});
-							});
-							var validator = $( "#campovalidar" ).validate();
-							validator.resetForm();
-							$("#continuar").hide();
-							$("#siguiente").show();
-							$("#liberar").hide();	
-						}
-						else{
-							$.alert('Clave incorrecta');
-			  	        	return false;
-    	    			}
+			title: 'Liberar informacion',
+			content: ''+
+			'<form action="" class="formName">'+
+			'<div class="form-group">'+
+			'<input type="password" placeholder="CLAVE HG" class="name form-control" required/>'+
+			'</div>'+
+			'</form>',
+			buttons:{
+				formsubmit:{
+					text: 'Aceptar',
+					btnClass: 'btn-red',
+					action: function(){
+						var user_id = this.$content.find('.name').val();
+						var user2 = this.$content.find('.name2').val();
+						$.ajax({
+							type:'POST',
+							url:'getData.php',
+							dataType: "json",
+							data:{user_id:user_id},
+							success:function(data){
+								if(data.status == 'ok'){
+									$tipo = "Liberacion";
+									$wo_no = document.getElementById("wo_no").value; 
+									$mother_bom = document.getElementById("bom").value; 
+									$lugar = "Validacion Rebaba inicio";
+									$(function() {
+										$.ajax({
+											type: "POST",
+											url: "insertpersonal.php",
+											data:{
+												'Tipo_Liberacion' : $tipo,
+												'wo_no' : $wo_no,
+												'mother_bom': $mother_bom,
+												'lugar': $lugar,
+												user_id:user_id,
+												user: user2
+											},
+										});
+									});
+									$.alert("Informacion Liberada Correctamente");
+									var validator = $( "#campovalidar" ).validate();
+									validator.resetForm();	
+									$("#continuar").hide();
+									$("#siguiente").show();
+									$("#liberar").hide();	
+								}
+								else if(data.status == 'duplicado'){
+									$.confirm({
+										title: 'Clave duplicada',
+										content: 'Ingresa tu Nombre de usuario para validar'+
+										'<form action="" class="formName">'+
+										'<div class="form-group">'+
+										'<input type="text" placeholder="USUARIO HG" class="name form-control" required/>'+
+										'</div>'+
+										'</form>',
+										buttons:{
+											formsubmit:{
+												text: 'Aceptar',
+												btnClass: 'btn-red',
+												action: function(){
+													var user2 = this.$content.find('.name').val();
+													$.ajax({
+														type:'POST',
+            	 										url:'getData2.php',
+            											dataType: "json",
+														data:{user:user2,
+														user_id:user_id},
+            											success:function(data){
+                											if(data.status == 'ok'){
+																$tipo = "Liberacion";
+																$wo_no = document.getElementById("wo_no").value; 
+																$mother_bom = document.getElementById("bom").value; 
+																$lugar = "Validacion Rebaba inicio";
+																$(function() {
+																	$.ajax({
+																		type: "POST",
+																		url: "insertpersonal.php",
+																		data:{
+																			'Tipo_Liberacion' : $tipo,
+																			'wo_no' : $wo_no,
+																			'mother_bom': $mother_bom,
+																			'lugar': $lugar,
+																			user_id:user_id,
+																			user: user2
+																		}
+																	});
+																});
+																$.alert("Informacion Liberada Correctamente");
+																var validator = $( "#campovalidar" ).validate();
+																validator.resetForm();	
+																$("#continuar").hide();
+																$("#siguiente").show();
+																$("#liberar").hide();
+															}
+															else{
+																$.alert("Falta escribir usuario/usuario erroneo");
+																return false;
+															}
+														}
+													});
+												}
+											}
+										}
+									});
+								}
+								else{
+									$.alert("Falta escribir clave/Clave erronea");
+								 	return false;
+								}
+							}
+						});
 					}
-    			},	
-    			cancel: function () {
-    				//close
-    			},
-  			},
-  			onContentReady: function () {
-  				// bind to events
-  				var jc = this;
-	    		this.$content.find('form').on('submit', function (e) {
-    				// if the user submits the form by pressing enter in the field.
-    				e.preventDefault();
-    				jc.$$formSubmit.trigger('click'); // reference the button and click it
-  				});
-			}
+				}
+			},
+			cancel: function () {
+      			//close
+			},
+			onContentReady: function () {
+    			// bind to events
+    			var jc = this;
+    			this.$content.find('form').on('submit', function (e) {
+     			// if the user submits the form by pressing enter in the field.
+      				e.preventDefault();
+      				jc.$$formSubmit.trigger('click'); // reference the button and click it
+    			});
+  			}
 		});
 	}
 	//-----------------------------------------TOOLTIP-----------------------------//

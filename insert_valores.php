@@ -22,14 +22,6 @@ if (isset ($_SESSION['USSER'])) {
 			$consulta = "update [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] set ".$campo." = '".$val."',  USER_INSERT = '".strtoupper($_SESSION['USSERNAME'])."', UPDATE_DATE = getdate() where BOM_NO = '".$name."'";
 			$resultado = odbc_do($conn, $consulta);	
 			echo "Ok,";
-				//echo $consulta." ==";
-				//echo htmlspecialchars($name . ': ' . $val) . "\n";
-				//strtoupper($_SESSION['USSERNAME'])
-			//, USER_INSERT = '".strtoupper($_SESSION['USSERNAME'])."''
 	   }
 	}
-//}
-
-
-
 ?>

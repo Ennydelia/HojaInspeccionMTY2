@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="es">
 <head>
-<title>Hoja de Inspeccion SLT</title>
+<title>Hoja de Inspeccion Slitter</title>
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -73,8 +73,6 @@
 						<input id="continuar" name= "continuar"  type="submit" value="Mandar a Rechazo" class="btn btn-danger">
 					</div>
 				</form>';
-//-----------------------------VALIDACION DEL OXIDO/CANTO OK---NO-OK-----------------------------------------//
-			
 			}
 			else{
 				echo "<h2>WO ".strtoupper($_GET["wo"])." VALIDADO.</h2>";
@@ -126,7 +124,7 @@
 	});
 //--------------------------------------ALERTA DE RECHAZO INTERNO------------------------------------------------//
 
-$(function() {
+	$(function() {
 		$("#continuar").click(function(e) {
 			e.preventDefault();
 			var actionurl = e.currentTarget.action;
@@ -134,42 +132,39 @@ $(function() {
 			var isvalid = $("#datosform").valid();
 			var mensaje = confirm("Mandar a rechazo interno: ");				
 			if (mensaje) {
-			if (isvalid) {
-				$.ajax({
-					url: "insert_header.php",
-					type: 'post',
-					data: $("#datosform").serialize(),
-					success: function(data) {
-						var str = data;
-						var res = str.split(",");				
-						if(res[0]=="Error"){
-							toastr.error(res[1], 'Error', {timeOut: 5000, positionClass: "toast-top-center"})
+				if (isvalid) {
+					$.ajax({
+						url: "insert_header.php",
+						type: 'post',
+						data: $("#datosform").serialize(),
+						success: function(data) {
+							var str = data;
+							var res = str.split(",");				
+							if(res[0]=="Error"){
+								toastr.error(res[1], 'Error', {timeOut: 5000, positionClass: "toast-top-center"})
+							}
+							else if(res[0]=="Warning"){
+								toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
+							}
+							else if(res[0]=="Ok"){
+								window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
+							window.location.replace("Rechazo_Validacion.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+							}
+							else{
+								toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
+							}
 						}
-						else if(res[0]=="Warning"){
-							toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
-						}
-						else if(res[0]=="Ok"){
-							window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
-						window.location.replace("Rechazo_Validacion.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-						}
-						else{
-							toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
-						}
-					}
-				});
+					});
+				}
 			}
-		}
-		else{
+			else{
 
-		}
+			}
 		});
 	});
 
-
-
-
-	</script>
-	<script src="js/popper.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	</body>
+</script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
 </html>		

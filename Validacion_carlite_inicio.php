@@ -24,7 +24,7 @@
 				if(odbc_result($resultado, 1) <> "0"){
 				}
 				else{
-					//REDIRIGE A LA SIGUIENTE EVALUCION (ESPESOR INICIAL)
+					//REDIRIGE A LA SIGUIENTE EVALUCION (ETIQUETA OPERADOR)
 				  header("Location: Validacion_etiqueta_operador.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);                
 					die();
 				}
@@ -39,7 +39,7 @@
 <!DOCTYPE HTML>
 <html lang="es">
 <head>
-<title>Hoja de Inspeccion SLT</title>
+<title>Hoja de Inspeccion Slitter</title>
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -66,7 +66,6 @@
 					echo "<input name='liberar' id='liberar' type='submit' class='btn btn-warning' style='float:right; display:none;' value='Liberar' onclick='Liberar()'>";
 					echo '</br>';
 					echo '</br>';
-					//aqui cambiar los IDs
 					echo '<form id="campovalidar" action="" method="post">';
 					echo '<table id="tabla-valor" class="table" style="width:100%"><tr><th colspan="2">ROLLO MADRE: '.$FORMER_BOM.'</th></tr><tr><th>BOM</th><th>CARLITE</th></tr>';
 					$count = 1;
@@ -85,8 +84,7 @@
 					$consulta2 = "SELECT BOM_NO, CARLITE FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '" .$FORMER_BOM."' AND WO_NO = '". strtoupper($_GET["wo"]) ."' order by BOM_NO, PROD_LINE_NO";
 					$resultado2 = odbc_do($conn, $consulta2);
 					$count2 = 1;
-					while(odbc_fetch_row($resultado2)){
-						
+					while(odbc_fetch_row($resultado2)){						
 						if(odbc_result($resultado2, 2) <> 'OK'){
 							echo" <script>
 								$(document).ready(function () {
@@ -135,7 +133,7 @@
 											$('#continuar').show();
 											$('#siguiente').hide();
 											
-											},
+										},
 										rules: {";
 											$consulta = "SELECT BOM_NO, convert(varchar(20), CARLITE) CARLITE, VAL_CARLITE_INICIO FROM [MTY_PROD_SSM].[dbo].[SSM_INSPECCION] WHERE MOTHER_BOM = '".$FORMER_BOM."' order by PROD_LINE_NO, BOM_NO";
 											$resultado = odbc_do($conn, $consulta);	
@@ -160,346 +158,467 @@
 											echo "extra: ''
 										}
 									});
-								});</script>";				
-							}
-							$count2++; 
+								});
+							</script>";				
 						}
+						$count2++; 
 					}
+				}
 			?>
 		</div>
 	</div>
 </div>
 <br/>
-			<!-- ---------------------------------------------------------- -->
-			<script src="js/pikaday.js"></script>
-			<link href="css/speech-input.css" rel="stylesheet">
-			<script src="js/speech-input.js"></script>
-			<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-			<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-			<script>
-		 $(document).ready(function(){
-				$('#bodymain').loading('stop');
-			});
+<!-- ---------------------------------------------------------- -->
+<script src="js/pikaday.js"></script>
+<link href="css/speech-input.css" rel="stylesheet">
+<script src="js/speech-input.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$('#bodymain').loading('stop');
+	});
+	//Desactiva la tecla enter al tener visible el boton de rechazos
 
-			//Desactiva la tecla enter al tener visible el boton de rechazos
-			$('#campovalidar').bind('keydown', function(e) {
-				if (e.which == 13) {
-				  return false;
+	$('#campovalidar').bind('keydown', function(e) {
+		if (e.which == 13) {
+			return false;
 		}
 	});
 
 
 //----------------------------SECCION DE REDIRECCIONAMIENTO DE VALIDACION------------------------
-			$("#campovalidar").on("click", function () {
-				$(this).select();
-  		});
-				$(function() {
-			$("#campovalidar").submit(function(e) {
-				e.preventDefault();
-				var actionurl = e.currentTarget.action;
-				console.log($("#campovalidar").serialize());
-				var isvalid = $("#campovalidar").valid();
-				if (isvalid) {
-					$.ajax({
-						url: "insert_valores.php",
-						type: 'post',
-						data: $("#campovalidar").serialize(),
-						success: function(data) {
-							var str = data;
-							var res = str.split(",");
-								if(res[0]=="Error"){
-									toastr.error(res[1], 'Error', {timeOut: 5000, positionClass: "toast-top-center"})
-									$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
-								}
-								else if(res[0]=="Warning"){
-									toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
-								}
-								else if(res[0]=="Ok"){
-									toastr.success(res[1], 'Anchos correctos', {timeOut: 2500, positionClass: "toast-top-center"});
-									var mensaje = confirm("Continuar con las tensiones");
-  								if (mensaje) {
-     	 							window.location.replace("Validacion2.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-  								}
-  								else {
-    								window.location.replace("Validacion_etiqueta_operador.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-    							}
+	$("#campovalidar").on("click", function () {
+		$(this).select();
+  	});
+	$(function() {
+		$("#campovalidar").submit(function(e) {
+			e.preventDefault();
+			var actionurl = e.currentTarget.action;
+			console.log($("#campovalidar").serialize());
+			var isvalid = $("#campovalidar").valid();
+			if (isvalid) {
+				$.ajax({
+					url: "insert_valores.php",
+					type: 'post',
+					data: $("#campovalidar").serialize(),
+					success: function(data) {
+						var str = data;
+						var res = str.split(",");
+						if(res[0]=="Error"){
+							toastr.error(res[1], 'Error', {timeOut: 5000, positionClass: "toast-top-center"})
+							$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
+						}
+						else if(res[0]=="Warning"){
+							toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
+						}
+						else if(res[0]=="Ok"){
+							toastr.success(res[1], 'Anchos correctos', {timeOut: 2500, positionClass: "toast-top-center"});
+							var mensaje = confirm("Continuar con las tensiones");
+  							if (mensaje) {
+    							window.location.replace("Validacion2.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+  							}
+  							else {
+    							window.location.replace("Validacion_etiqueta_operador.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
     						}
+    					}
+						else{
+							toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
+						}
+					}
+				});
+			}
+		});
+	});
+		 
+//------------------FUNCION QUE REDIRIGE A LA PAGINA DE RECHAOS INTERNOS-------------------------------------
+	function PagRec(){
+		$.confirm({
+			title: 'Mandar a Rechazo Interno',
+			content: 'Para mandar a Rechazo es necesaria la clave de acceso:'+
+			'<form action="" class="formName">'+
+			'<div class="form-group">'+
+			'<input type= "password" placeholder="CLAVE HG" class="password form-control" required/>'+
+			'</div>'+
+			'</form>',
+			buttons: {
+				formSumbit: {
+					text: 'Aceptar',
+					btnClass: 'btn-red',
+					action: function(){
+						var user_id = this.$content.find('.password').val();
+						var user2 = this.$content.find('.name2').val();
+						$.ajax({
+							type:'POST',
+							url:'getData.php',
+							dataType: "json",
+							data:{user_id:user_id},
+							success:function(data){
+								if(data.status == 'ok'){
+									$tipo = "Rechazo";
+									$wo_no = document.getElementById("wo_no").value; 
+									$mother_bom = document.getElementById("bom").value; 
+									$lugar = "Validacion Carlite inicio";
+									$(function() {
+										$.ajax({
+											type: "POST",
+											url: "insertpersonal.php",
+											data:{
+												'Tipo_Liberacion' : $tipo,
+												'wo_no' : $wo_no,
+												'mother_bom': $mother_bom,
+												'lugar': $lugar,
+												user_id:user_id,
+												user: user2
+											},
+										});
+									});
+									$(function() {
+										console.log($("#campovalidar").serialize());
+										$.ajax({
+											url: "insert_valores.php",
+											type: 'post',
+											data: $("#campovalidar").serialize(),
+											success: function(data) {
+												var str = data;
+												var res = str.split(",");							
+												if(res[0]=="Error"){
+													toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
+													$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
+												}
+												else if(res[0]=="Warning"){
+													toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
+												}
+												else if(res[0]=="Ok"){
+													toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
+													window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
+													window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+												}
+												else{
+													toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
+												}
+											}
+										});			
+									});		
+									$.alert("Rechazado");
+									var validator = $( "#campovalidar" ).validate();
+									validator.resetForm();	
+									$("#continuar").hide();
+									$("#siguiente").show();
+									$("#liberar").hide();
+								}
+								else if(data.status == 'duplicado'){
+									$.confirm({
+										title: 'Clave duplicada',
+										content: 'Ingresa tu Nombre de usuario para validar'+
+										'<form action="" class="formName">'+
+										'<div class="form-group">'+
+										'<input type="text" placeholder="USUARIO HG" class="name form-control" required/>'+
+										'</div>'+
+										'</form>',
+										buttons:{
+											formsubmit:{
+												text: 'Aceptar',
+												btnClass: 'btn-red',
+												action: function(){
+													var user2 = this.$content.find('.name').val();
+													$.ajax({
+														type:'POST',
+            	 										url:'getData2.php',
+            											dataType: "json",
+														data:{user:user2,
+														user_id:user_id},
+            											success:function(data){
+                											if(data.status == 'ok'){
+																$tipo = "Rechazo";
+																$wo_no = document.getElementById("wo_no").value; 
+																$mother_bom = document.getElementById("bom").value; 
+																$lugar = "Validacion Carlite inicio";
+																$(function() {
+																	$.ajax({
+																		type: "POST",
+																		url: "insertpersonal.php",
+																		data:{
+																			'Tipo_Liberacion' : $tipo,
+																			'wo_no' : $wo_no,
+																			'mother_bom': $mother_bom,
+																			'lugar': $lugar,
+																			user_id:user_id,
+																			user: user2
+																		}
+																	});
+																});
+																$(function() {
+																	console.log($("#campovalidar").serialize());
+																	$.ajax({
+																		url: "insert_valores.php",
+																		type: 'post',
+																		data: $("#campovalidar").serialize(),
+																		success: function(data) {
+																			var str = data;
+																			var res = str.split(",");							
+																			if(res[0]=="Error"){
+																				toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
+																				$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
+																			}
+																			else if(res[0]=="Warning"){
+																				toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
+																			}
+																			else if(res[0]=="Ok"){
+																				toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
+																				window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
+																				window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
+																			}
+																			else{
+																				toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
+																			}	
+																		}
+																	});			
+																});
+																$.alert("Rechazado");
+																var validator = $( "#campovalidar" ).validate();
+																validator.resetForm();	
+																$("#continuar").hide();
+																$("#siguiente").show();
+																$("#liberar").hide();
+															}
+															else{
+																$.alert("Falta escribir usuario/usuario erroneo");
+																return false;
+															}
+														}
+													});
+												}
+											}
+										}
+									});
+								}
 								else{
-									toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
+									$.alert("Falta escribir clave/Clave erronea");
+								 	return false;
 								}
 							}
 						});
 					}
-				});
-			});
-		 
-//------------------FUNCION QUE REDIRIGE A LA PAGINA DE RECHAOS INTERNOS-------------------------------------
-function PagRec() {
-		$.confirm({
-			title: 'Mandar a Rechazo Interno',
-    	content: 'Para mandar a Rechazo es necesaria la clave de acceso:' +
-    	'<form action="" class="formName">' +
-    	'<div class="form-group">' +		
-    	'<input type="password" placeholder="clave" class="password form-control" required />' +
-    	'</div>' +
-   		'</form>',
-    	buttons: {
-      	formSubmit: {
-      	  text: 'Aceptar',
-          btnClass: 'btn-red',
-          action: function () {
-      	    var name = this.$content.find('.password').val();
-						//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-						if(name == 'CT101010' || name == 'JJ651510' ||name == 'FP654417' || name == 'AS622461' ||name == "IO734384"||name == 'IO731603' || name == 'IO756514'||name == 'SP916101' || name == 'SP957102'||name == 'SP936703' || name == 'SP991604'||name == 'SP988605'||name == 'SP948506'||name == 'SP928607'||name == 'SP908908'||name == 'SP985361' ||name =='SP934311' ) 
-			  		{
-							if(name=="CT101010"){$user="Carlos Tovar"}
-							if(name=="JJ651510"){$user="Jessica Jimenez"}
-        					if(name=="FP654417"){$user="Fernanda Perales"}
-        					if(name=="AS622461"){$user="Alfredo Silva"}
-        					if(name=="IO734384"){$user="Roberto Guerrero"}
-        					if(name=="IO731603"){$user="Rene Nolasco"}
-							if(name=="IO756514"){$user="Inspector 3"}
-        					if(name=="SP916101"){$user="Carlos Valdez"}
-							if(name=="SP957102"){$user="Carlos Domínguez"}
-							if(name=="SP936703"){$user="Ricardo Garcia"}
-							if(name=="SP991604"){$user="Roberto Cerda"}
-							if(name=="SP988605"){$user="Noe Mendoza"}
-							if(name=="SP948506"){$user="Adrián Saucedo"}
-							if(name=="SP928607"){$user="Mauricio Lumbreras"}
-							if(name=="SP908908"){$user="Luciano Platas"}
-							if(name=="SP985361"){$user="Blas Escobar"}
-							if(name=="SP934311"){$user="Orlando Morales"}
-							$tipo = "Rechazo";
-							$wo_no = document.getElementById("wo_no").value; 
-							$mother_bom = document.getElementById("bom").value; 
-							$lugar = "Validacion Carlite inicio";
-							$.alert('Mandado a rechazo por: ' + $user);
-							$(function() {
-								$.ajax({
-	                type: "POST",
-                	url: "insertpersonal.php",
-                	data:{
-                 		'Tipo_Liberacion' : $tipo,
-                 		'Libero' :$user,
-                  	'wo_no' : $wo_no,
-              	  	'mother_bom': $mother_bom,
-										'lugar': $lugar
-									},
-								});
-							});
-							$(function() {
-								console.log($("#campovalidar").serialize());
-								$.ajax({
-									url: "insert_valores.php",
-									type: 'post',
-									data: $("#campovalidar").serialize(),
-									success: function(data) {
-										var str = data;
-										var res = str.split(",");							
-										if(res[0]=="Error"){
-											toastr.error(data, 'Error ', {timeOut: 5000, positionClass: "toast-top-center"})
-											$('#tabla-valor tr:last').after('<tr><td>...</td><td>...</td></tr>');
-										}
-										else if(res[0]=="Warning"){
-											toastr.warning(res[1], 'Warning', {timeOut: 5000, positionClass: "toast-top-center"})
-										}
-										else if(res[0]=="Ok"){
-											toastr.success(res[1], 'Rechazado', {timeOut: 2500, positionClass: "toast-top-center"});
-											window.open("http://mtyserlam1v1:8080/mtyblog/wp-login.php");
-											window.location.replace("Rechazado.php?wo=<?php echo $_GET["wo"]."&bom=".$_GET["bom"]; ?>");
-										}
-										else{
-											toastr.error(data, 'Error ' + data, {timeOut: 5000, positionClass: "toast-top-center"})
-										}
-									}
-								});			
-							});		
-          	}
-						else{
-							$.alert('Clave incorrecta');
-  	          return false;
-    	      }
-					}
-      	},
-      	cancel: function () {
-      		//close
-      	},
-    	},
-    	onContentReady: function () {
-    		// bind to events
-    		var jc = this;
-    		this.$content.find('form').on('submit', function (e) {
+				}
+			},
+			cancel: function () {
+      			//close
+			  },
+			  onContentReady: function () {
+    			// bind to events
+    			var jc = this;
+    			this.$content.find('form').on('submit', function (e) {
      			// if the user submits the form by pressing enter in the field.
-      		e.preventDefault();
-      		jc.$$formSubmit.trigger('click'); // reference the button and click it
-    		});
-  		}
-		});	
+      				e.preventDefault();
+      				jc.$$formSubmit.trigger('click'); // reference the button and click it
+    			});
+  			}
+		});
 	}
+		
 //------------------------------------------FUNCION PARA LIBERAR INFORMACION------------------------
 	function Liberar() {
 		$.confirm({
-    	title: 'Liberar informacion',
-    	content: '' +
-    	'<form action="" class="formName">' +
-    	'<div class="form-group">' +
-    	'<input type="password" placeholder="clave" class="name form-control" required />' +
-    	'</div>' +
-   		'</form>',
-	  	buttons: {
-    		formSubmit: {
-        	text: 'Aceptar',
-	        btnClass: 'btn-red',
-  	      action: function () {
-    	    	var name = this.$content.find('.name').val();
-				  	//CLAVE ESPECIAL PARA INSPECTORES/CALIDAD 
-					  if(name == 'CT101010' || name == 'JJ651510' ||name == 'FP654417' || name == 'AS622461' ||name == "IO734384"||name == 'IO731603' || name == 'IO756514'||name == 'SP916101' || name == 'SP957102'||name == 'SP936703' || name == 'SP991604'||name == 'SP988605'||name == 'SP948506'||name == 'SP928607'||name == 'SP908908'||name == 'SP985361' ||name =='SP934311' ) 
-			  		{
-							if(name=="CT101010"){$user="Carlos Tovar"}
-							if(name=="JJ651510"){$user="Jessica Jimenez"}
-        					if(name=="FP654417"){$user="Fernanda Perales"}
-        					if(name=="AS622461"){$user="Alfredo Silva"}
-        					if(name=="IO734384"){$user="Roberto Guerrero"}
-        					if(name=="IO731603"){$user="Rene Nolasco"}
-							if(name=="IO756514"){$user="Inspector 3"}
-        					if(name=="SP916101"){$user="Carlos Valdez"}
-							if(name=="SP957102"){$user="Carlos Domínguez"}
-							if(name=="SP936703"){$user="Ricardo Garcia"}
-							if(name=="SP991604"){$user="Roberto Cerda"}
-							if(name=="SP988605"){$user="Noe Mendoza"}
-							if(name=="SP948506"){$user="Adrián Saucedo"}
-							if(name=="SP928607"){$user="Mauricio Lumbreras"}
-							if(name=="SP908908"){$user="Luciano Platas"}
-							if(name=="SP985361"){$user="Blas Escobar"}
-							if(name=="SP934311"){$user="Orlando Morales"}
-							$tipo = "Liberacion";
-							$wo_no = document.getElementById("wo_no").value; 
-							$mother_bom = document.getElementById("bom").value; 
-							$lugar = "Validacion Carlite inicio";
-							$.alert('Datos desbloqueados por: ' + $user);
-							$(function() {
-								$.ajax({
-  	              type: "POST",
-    	            url: "insertpersonal.php",
-      	          data:{
-        	         'Tipo_Liberacion' : $tipo,
-          	       'Libero' :$user,
-            	      'wo_no' : $wo_no,
-              		  'mother_bom': $mother_bom,
-										'lugar': $lugar
-									},
-								});
-							});
-							var validator = $( "#campovalidar" ).validate();
-							validator.resetForm();
-							$("#continuar").hide();
-							$("#siguiente").show();
-							$("#liberar").hide();	
-						}
-						else{
-							$.alert('Clave incorrecta');
-  	        	return false;
-    	    	}
+			title: 'Liberar informacion',
+			content: ''+
+			'<form action="" class="formName">'+
+			'<div class="form-group">'+
+			'<input type="password" placeholder="CLAVE HG" class="name form-control" required/>'+
+			'</div>'+
+			'</form>',
+			buttons:{
+				formsubmit:{
+					text: 'Aceptar',
+					btnClass: 'btn-red',
+					action: function(){
+						var user_id = this.$content.find('.name').val();
+						var user2 = this.$content.find('.name2').val();
+						$.ajax({
+							type:'POST',
+							url:'getData.php',
+							dataType: "json",
+							data:{user_id:user_id},
+							success:function(data){
+								if(data.status == 'ok'){
+									$tipo = "Liberacion";
+									$wo_no = document.getElementById("wo_no").value; 
+									$mother_bom = document.getElementById("bom").value; 
+									$lugar = "Validacion Carlite inicio";
+									$(function() {
+										$.ajax({
+											type: "POST",
+											url: "insertpersonal.php",
+											data:{
+												'Tipo_Liberacion' : $tipo,
+												'wo_no' : $wo_no,
+												'mother_bom': $mother_bom,
+												'lugar': $lugar,
+												user_id:user_id,
+												user: user2
+											},
+										});
+									});
+									$.alert("Informacion Liberada Correctamente");
+									var validator = $( "#campovalidar" ).validate();
+									validator.resetForm();	
+									$("#continuar").hide();
+									$("#siguiente").show();
+									$("#liberar").hide();	
+								}
+								else if(data.status == 'duplicado'){
+									$.confirm({
+										title: 'Clave duplicada',
+										content: 'Ingresa tu Nombre de usuario para validar'+
+										'<form action="" class="formName">'+
+										'<div class="form-group">'+
+										'<input type="text" placeholder="USUARIO HG" class="name form-control" required/>'+
+										'</div>'+
+										'</form>',
+										buttons:{
+											formsubmit:{
+												text: 'Aceptar',
+												btnClass: 'btn-red',
+												action: function(){
+													var user2 = this.$content.find('.name').val();
+													$.ajax({
+														type:'POST',
+            	 										url:'getData2.php',
+            											dataType: "json",
+														data:{user:user2,
+														user_id:user_id},
+            											success:function(data){
+                											if(data.status == 'ok'){
+																$tipo = "Liberacion";
+																$wo_no = document.getElementById("wo_no").value; 
+																$mother_bom = document.getElementById("bom").value; 
+																$lugar = "Validacion Carlite inicio";
+																$(function() {
+																	$.ajax({
+																		type: "POST",
+																		url: "insertpersonal.php",
+																		data:{
+																			'Tipo_Liberacion' : $tipo,
+																			'wo_no' : $wo_no,
+																			'mother_bom': $mother_bom,
+																			'lugar': $lugar,
+																			user_id:user_id,
+																			user: user2
+																		}
+																	});
+																});
+																$.alert("Informacion Liberada Correctamente");
+																var validator = $( "#campovalidar" ).validate();
+																validator.resetForm();	
+																$("#continuar").hide();
+																$("#siguiente").show();
+																$("#liberar").hide();
+															}
+															else{
+																$.alert("Falta escribir usuario/usuario erroneo");
+																return false;
+															}
+														}
+													});
+												}
+											}
+										}
+									});
+								}
+								else{
+									$.alert("Falta escribir clave/Clave erronea");
+								 	return false;
+								}
+							}
+						});
 					}
-    		},	
-    		cancel: function () {
-    			//close
-    		},
-  		},
-  		onContentReady: function () {
-  			// bind to events
-  			var jc = this;
-    		this.$content.find('form').on('submit', function (e) {
-    			// if the user submits the form by pressing enter in the field.
-    			e.preventDefault();
-    			jc.$$formSubmit.trigger('click'); // reference the button and click it
-  			});
-			}
+				}
+			},
+			cancel: function () {
+      			//close
+			},
+			onContentReady: function () {
+    			// bind to events
+    			var jc = this;
+    			this.$content.find('form').on('submit', function (e) {
+     			// if the user submits the form by pressing enter in the field.
+      				e.preventDefault();
+      				jc.$$formSubmit.trigger('click'); // reference the button and click it
+    			});
+  			}
 		});
 	}
-//------------------------------------------------------------------------------------------------------//
-					 $( function()
-						{
-								var targets = $( '[rel~=tooltip]' ),
-										target  = false,
-										tooltip = false,
-										title   = false;
-						
-								targets.bind( 'mouseenter', function()
-								{
-										target  = $( this );
-										tip     = target.attr( 'title' );
-										tooltip = $( '<div id="tooltip"></div>' );
-						
-										if( !tip || tip == '' )
-												return false;
-						
-										target.removeAttr( 'title' );
-										tooltip.css( 'opacity', 0 )
-													.html( tip )
-													.appendTo( 'body' );
-						
-										var init_tooltip = function()
-										{
-												if( $( window ).width() < tooltip.outerWidth() * 1.5 )
-														tooltip.css( 'max-width', $( window ).width() / 2 );
-												else
-														tooltip.css( 'max-width', 340 );
-						
-												var pos_left = target.offset().left + ( target.outerWidth() / 2 ) - ( tooltip.outerWidth() / 2 ),
-														pos_top  = target.offset().top - tooltip.outerHeight() - 20;
-						
-												if( pos_left < 0 )
-												{
-														pos_left = target.offset().left + target.outerWidth() / 2 - 20;
-														tooltip.addClass( 'left' );
-												}
-												else
-														tooltip.removeClass( 'left' );
-						
-												if( pos_left + tooltip.outerWidth() > $( window ).width() )
-												{
-														pos_left = target.offset().left - tooltip.outerWidth() + target.outerWidth() / 2 + 20;
-														tooltip.addClass( 'right' );
-												}
-												else
-														tooltip.removeClass( 'right' );
-						
-												if( pos_top < 0 )
-												{
-														var pos_top  = target.offset().top + target.outerHeight();
-														tooltip.addClass( 'top' );
-												}
-												else
-														tooltip.removeClass( 'top' );
-						
-												tooltip.css( { left: pos_left, top: pos_top } )
-															.animate( { top: '+=10', opacity: 1 }, 50 );
-										};
-						
-										init_tooltip();
-										$( window ).resize( init_tooltip );
-						
-										var remove_tooltip = function()
-										{
-												tooltip.animate( { top: '-=10', opacity: 0 }, 50, function()
-												{
-														$( this ).remove();
-												});
-						
-												target.attr( 'title', tip );
-										};
-						
-										target.bind( 'mouseleave', remove_tooltip );
-										tooltip.bind( 'click', remove_tooltip );
-								});
-						});
 
-	 
-			</script>
-			<script src="js/popper.min.js"></script>
-			<script src="js/bootstrap.min.js"></script>
-			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-			</body>
+//------------------------------------------------------------------------------------------------------//
+	$( function()
+	{
+		var targets = $( '[rel~=tooltip]' ),
+		target  = false,
+		tooltip = false,
+		title   = false;
+		targets.bind( 'mouseenter', function()
+		{
+			target  = $( this );
+			tip     = target.attr( 'title' );
+			tooltip = $( '<div id="tooltip"></div>' );
+			if( !tip || tip == '' )
+				return false;
+			target.removeAttr( 'title' );
+			tooltip.css( 'opacity', 0 )
+			.html( tip )
+			.appendTo( 'body' );
+			var init_tooltip = function()
+			{
+				if( $( window ).width() < tooltip.outerWidth() * 1.5 )
+					tooltip.css( 'max-width', $( window ).width() / 2 );
+				else
+					tooltip.css( 'max-width', 340 );
+				var pos_left = target.offset().left + ( target.outerWidth() / 2 ) - ( tooltip.outerWidth() / 2 ),
+				pos_top  = target.offset().top - tooltip.outerHeight() - 20;
+				if( pos_left < 0 )
+				{
+					pos_left = target.offset().left + target.outerWidth() / 2 - 20;
+					tooltip.addClass( 'left' );
+				}
+				else
+					tooltip.removeClass( 'left' );
+				if( pos_left + tooltip.outerWidth() > $( window ).width() )
+				{
+					pos_left = target.offset().left - tooltip.outerWidth() + target.outerWidth() / 2 + 20;
+					tooltip.addClass( 'right' );
+				}
+				else
+					tooltip.removeClass( 'right' );
+				if( pos_top < 0 )
+				{
+					var pos_top  = target.offset().top + target.outerHeight();
+					tooltip.addClass( 'top' );
+				}
+				else
+					tooltip.removeClass( 'top' );
+					tooltip.css( { left: pos_left, top: pos_top } )
+					.animate( { top: '+=10', opacity: 1 }, 50 );
+			};
+			init_tooltip();
+			$( window ).resize( init_tooltip );
+			var remove_tooltip = function()
+			{
+				tooltip.animate( { top: '-=10', opacity: 0 }, 50, function()
+				{
+					$( this ).remove();
+				});
+				target.attr( 'title', tip );
+			};
+			target.bind( 'mouseleave', remove_tooltip );
+			tooltip.bind( 'click', remove_tooltip );
+		});
+	});
+
+</script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+</body>
 </html>

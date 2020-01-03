@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<title>Hoja de Inspeccion SLT</title>
+	<title>Hoja de Inspeccion Slitter</title>
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -11,8 +11,8 @@
 		<br/>
 		<br/>
 		<div class="row">
-		  <div class= "col-lg-6 col-md-6 col-sm-6">
-			  <form action="Validacion.php" method="get"> 
+		  	<div class= "col-lg-6 col-md-6 col-sm-6">
+				<form action="Validacion.php" method="get"> 
 					<div class="form-group col-md-8">
 						<label class="col-sm-4 col-form-label">NO ORDEN:</label>
 						<input type="text" class="col-SM-2 lg-6 form-control" id="wo" name="wo" required="required" autocomplete="off"  autofocus="on" placeholder="WO NO" aria-label="WO NO" lang="es">
@@ -40,38 +40,31 @@
 					</div>
 				</div>
 			</form>
-	</div>
-	</br>
-
+		</div>
+		</br>
 <!---SCRIPS-->	
 	<script src="js/pikaday.js"></script>
 	<link href="css/speech-input.css" rel="stylesheet">
 	<script src="js/speech-input.js"></script>
 	<script>
-
-						 $(document).ready(function()
-					 {
-							 $('#bodymain').loading('stop');
-							
-					 });
-
-					 function DSQL() {
-							 $("#continuar").show();
-							 $("#DSQL2").show();
-
-							 $.ajax({url: "Informacion_index.php?wo=" + $("#wo").val(), success: function(result){
-							 $("#DSQL").html(result);
-							 }});
-							 $.ajax({url: "Informacion_index2.php?wo=" + $("#wo").val(), success: function(result){
-							 $("#DSQL2").html(result);
-							 }});
-
-							 $("#consultar").hide();
-						}
-						
-			</script>
-			<script src="js/popper.min.js"></script>
-			<script src="js/bootstrap.min.js"></script>
-		</body>
-	</head>
+		$(document).ready(function()
+		{
+			$('#bodymain').loading('stop');
+		});
+		function DSQL() {
+			$("#continuar").show();
+			$("#DSQL2").show();
+			$.ajax({url: "Informacion_index.php?wo=" + $("#wo").val(), success: function(result){
+				$("#DSQL").html(result);
+			}});
+			$.ajax({url: "Informacion_index2.php?wo=" + $("#wo").val(), success: function(result){
+				$("#DSQL2").html(result);
+			}});
+			$("#consultar").hide();
+		}
+</script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</head>
 </html>
