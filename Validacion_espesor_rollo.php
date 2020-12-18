@@ -35,10 +35,6 @@
 				}
 			}
 		}
-		if($yavalidado == 1){
-			header("Location: Validacion_ancho_inicio.php?wo=".$_GET["wo"]."&bom=".$_GET["bom"]);
-			die();
-		}
 	}
 ?>
 <!-- INICIO DISEÑO HTML/PHP PARA VALIDACION DE DATOS -->
